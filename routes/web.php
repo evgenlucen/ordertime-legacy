@@ -5,6 +5,7 @@ use App\Http\Controllers\AmoCRM\AmoSetPipelinesDataToDbController;
 use App\Http\Controllers\AmoCRM\AnalyticsController;
 use App\Http\Controllers\AmoCRM\AnalyticsControllerTest;
 use App\Http\Controllers\AmoCRM\Helpers\AddTagsController;
+use App\Http\Controllers\AmoCRM\Helpers\ChangeLeadStatus;
 use App\Http\Controllers\AmoCRM\Info\AmoInfo;
 use App\Http\Controllers\Bizon\ReportHandlerController;
 use App\Http\Controllers\Events\EventGetcourseDealController;
