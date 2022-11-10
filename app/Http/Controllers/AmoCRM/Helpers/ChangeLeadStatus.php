@@ -4,7 +4,12 @@ namespace App\Http\Controllers\AmoCRM\Helpers;
 
 
 use AmoCRM\Models\LeadModel;
+use App\Models\Dto\Action\ActionParamsDto;
+use App\Models\Dto\Action\AmoActionDto;
 use App\Services\AmoCRM\ApiClient\GetApiClient;
+use App\Services\AmoCRM\Lead\GetLeadById;
+use App\Services\AmoCRM\Pipelines\Statuses\GetPriorityStatusByLeadModel;
+use App\Services\Bizon\Report\Tasks\GetPriorityStatusByAmoActionDto;
 use App\Services\Logger\Logger;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,6 +27,10 @@ class ChangeLeadStatus extends Controller
 
         $status_id = (int) $request->input('status_id');
         $lead_id = (int) $request->input('amo_lead_id');
+        $pipeline_id = (int) $request->input('pipeline_id');
+
+        Assert::notEmpty($pipeline_id, "pipeline_id undefined");
+        Assert::minLength($pipeline_id,5,"pipeline_id must min 5 simbols");
 
         Assert::notEmpty($status_id, "status_id undefined");
         Assert::minLength($status_id,6,"status_id must min 6 simbols");
@@ -31,10 +40,32 @@ class ChangeLeadStatus extends Controller
 
         $api_client = GetApiClient::getApiClient();
 
-        # Получить сделку
-        $lead = new LeadModel();
-        $lead->setId($lead_id);
-        $lead->setStatusId($status_id);
+        $lead = GetLeadById::run($api_client,$lead_id);
+
+        # влияет обновим ли мы статус и воронку
+        $priority_status_lead = GetPriorityStatusByLeadModel::run($lead);
+
+        $amo_action = new AmoActionDto();
+        $amo_action->setStatusId($status_id);
+        $amo_action->setPipelineId($pipeline_id);
+
+        $priority_status_request = GetPriorityStatusByAmoActionDto::run($amo_action);
+        $data_log['priority_statuses'][] = ['lead' => $priority_status_lead, 'user' => $priority_status_request];
+
+        /** Если приоритет нового статуса выше - обновляем в модели */
+        if ($priority_status_request > $priority_status_lead) {
+            $lead->setStatusId($amo_action->getStatusId());
+            $lead->setPipelineId($amo_action->getPipelineId());
+        } else {
+            return new JsonResponse(
+                [
+                    'success' => false,
+                    'error' => sprintf(
+                        'Priority status lead %s, your status priority %s',
+                        $priority_status_lead,
+                        $priority_status_request)
+                ]);
+        }
 
         $lead = $api_client->leads()->updateOne($lead);
 
