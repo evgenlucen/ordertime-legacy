@@ -28,7 +28,8 @@ Route::prefix('amocrm')->group(function(){
     Route::get('statuses-get',[AmoSetPipelinesDataToDbController::class,'get']);
     Route::get('statuses',[AmoSetPipelinesDataToDbController::class,'index'])->name('statuses');
     Route::prefix('helper')->group(function(){
-        Route::post('add_tags',[AddTagsController::class,'run']);
+        Route::post('add-tags',[AddTagsController::class,'run']);
+        Route::post('change-lead-status',[ChangeLeadStatus::class,'run']);
     });
 
     Route::get('test',function (){
