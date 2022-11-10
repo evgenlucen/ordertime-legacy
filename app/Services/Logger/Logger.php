@@ -10,7 +10,8 @@ class Logger
      * @param string $title
      * @return bool
      */
-    public static function writeToLog($data, $log_file,$title = '') {
+    public static function writeToLog($data, $log_file, string $title = ''): bool
+    {
         $log = "\n------------------------\n";
         $log .= date("Y.m.d G:i:s") . "\n";
         $log .= time() . "\n";
