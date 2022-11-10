@@ -5,10 +5,8 @@ namespace App\Http\Controllers\AmoCRM\Helpers;
 
 use AmoCRM\Models\LeadModel;
 use App\Services\AmoCRM\ApiClient\GetApiClient;
-use App\Services\AmoCRM\Lead\FindLeadBySalebotEventRequest;
-use App\Services\AmoCRM\Tag\AddTagsToLeadByLeadModel;
 use App\Services\Logger\Logger;
-use Illuminate\Http\Client\Response;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,26 +15,25 @@ use Webmozart\Assert\Assert;
 class ChangeLeadStatus extends Controller
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function run(Request $request): JsonResponse
     {
 
-        $status_id = $request->input('status_id');
+        $status_id = (int) $request->input('status_id');
+        $lead_id = (int) $request->input('amo_lead_id');
 
-        if(empty($status_id)){
-            return new JsonResponse(['success' => false, 'error' => 'status_id undefined']);
-        }
+        Assert::notEmpty($status_id, "status_id undefined");
+        Assert::minLength($status_id,6,"status_id must min 6 simbols");
 
-        Assert::integer($status_id,"status_id must be int");
-        Assert::minLength($status_id,6,"status_id must be int");
-
-
+        Assert::notEmpty($lead_id, "lead_id undefined");
+        Assert::minLength($lead_id,6,"lead_id must be min 6 simbols");
 
         $api_client = GetApiClient::getApiClient();
 
         # Получить сделку
         $lead = new LeadModel();
+        $lead->setId($lead_id);
         $lead->setStatusId($status_id);
 
         $lead = $api_client->leads()->updateOne($lead);
