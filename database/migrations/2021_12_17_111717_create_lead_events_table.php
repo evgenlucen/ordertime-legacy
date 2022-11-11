@@ -14,7 +14,7 @@ class CreateLeadEventsTable extends Migration
     public function up()
     {
         Schema::create('lead_events', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('lead_id');
             $table->string('event_name');
             $table->timestamps();

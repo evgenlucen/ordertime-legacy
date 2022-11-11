@@ -27,7 +27,7 @@ Route::prefix('amocrm')->group(function(){
     Route::get('auth',[AmoAuthController::class, 'run']);
     Route::post('statuses-create',[AmoSetPipelinesDataToDbController::class,'create']);
     Route::get('statuses-get',[AmoSetPipelinesDataToDbController::class,'get']);
-    Route::get('statuses',[AmoSetPipelinesDataToDbController::class,'index'])->name('statuses');
+    Route::get('statuses',[AmoSetPipelinesDataToDbController::class,'index']);
     Route::prefix('helper')->group(function(){
         Route::post('add-tags',[AddTagsController::class,'run']);
         Route::post('change-lead-status',[ChangeLeadStatus::class,'run']);

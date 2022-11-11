@@ -11,6 +11,7 @@ class Pipeline extends Model
 
     public $fillable = ['id','name', 'is_main'];
     public $incrementing = false;
+    public $table = 'pipelines';
 
     public function statuses(){
         return $this->hasMany(Status::class);
