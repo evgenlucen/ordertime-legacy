@@ -50,6 +50,9 @@ class ChangeLeadStatus extends Controller
         $amo_action->setPipelineId($pipeline_id);
 
         $priority_status_request = GetPriorityStatusByAmoActionDto::run($amo_action);
+        if(null === $priority_status_request) {
+            return new JsonResponse(['success' => false, 'error' => 'status_id not found in our database']);
+        }
         $data_log['priority_statuses'][] = ['lead' => $priority_status_lead, 'user' => $priority_status_request];
 
         /** Если приоритет нового статуса выше - обновляем в модели */
