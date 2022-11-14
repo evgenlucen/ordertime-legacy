@@ -12,6 +12,8 @@ use App\Configs\amocrmConfig;
 class LeadForAnalyticsDto
 {
 
+    public const CRM_NAME = 'amoCRM';
+
     public ?int $lead_id = null;
     public ?string $google_client_id = '';
     public bool $is_ga_cid_generated = false;
@@ -30,7 +32,7 @@ class LeadForAnalyticsDto
     public ?string $utm_content = '';
 
 
-    public function toArray()
+    public function toArray(): array
     {
         $lead = [];
         if(!empty($this->getLeadId())){
@@ -374,6 +376,7 @@ class LeadForAnalyticsDto
     {
         $this->lead_id = $lead_id;
     }
+
 
 
 }

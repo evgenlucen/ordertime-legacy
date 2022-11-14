@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\AmoCRM;
 
 
+use AmoCRM\Exceptions\AmoCRMApiException;
+use AmoCRM\Exceptions\AmoCRMMissedTokenException;
+use AmoCRM\Exceptions\AmoCRMoAuthApiException;
+use App\Configs\googleAnalyticsConfig;
 use App\Services\AmoCRM\ApiClient\GetApiClient;
 use App\Services\AmoCRM\Interfaces\WebhookTypeInterface;
 use App\Services\AmoCRM\Lead\CreateLeadForAnalyticsDtoFromWebhook;
@@ -11,24 +15,32 @@ use App\Services\AmoCRM\Lead\Tasks\GetTypeEventByWebhook;
 use App\Services\AmoCRM\Pipelines\AddPipelineDataToDataBase;
 use App\Services\AmoCRM\Pipelines\Statuses\AddStatusesDataToDataBase;
 use App\Services\AmoCRM\Pipelines\Tasks\CheckPipelineAccessForAnalytics;
-
-use App\Services\Analytics\FacebookAds\CreateFacebookEventsLeadForAnalyticsDto;
+use App\Services\Analytics\GA4\CreateGA4EventByLeadForAnalyticsDto;
 use App\Services\Analytics\GoogleAnalytics\CheckEventForDoubleByLeadForAnalyticsDto;
-use App\Services\Analytics\GoogleAnalytics\CreateGoogleAnalyticsDtoByLeadForAnalyticsDto;
 use App\Services\Analytics\GoogleAnalytics\GetStatusNameByStatusIdAndPipelineId;
-
 use App\Services\Analytics\GoogleAnalytics\Tasks\AddEventLeadToDB;
 use App\Services\Analytics\GoogleAnalytics\Tasks\CreateGeneratedGaCid;
 use App\Services\Logger\Logger;
-use FacebookAds\Api;
-use FacebookAds\Logger\CurlLogger;
-use FacebookAds\Object\ServerSide\EventRequest;
+use Br33f\Ga4\MeasurementProtocol\Exception\HydrationException;
+use Br33f\Ga4\MeasurementProtocol\Exception\ValidationException;
+use Br33f\Ga4\MeasurementProtocol\Service;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AnalyticsController extends Controller
 {
 
+    /**
+     * @param Request $request
+     * @return JsonResponse|void
+     * @throws AmoCRMApiException
+     * @throws AmoCRMMissedTokenException
+     * @throws AmoCRMoAuthApiException
+     * @throws HydrationException
+     * @throws ValidationException
+     * @throws \Exception
+     */
     public static function run(Request $request)
     {
         # узнать тип вебхука
@@ -80,8 +92,7 @@ class AnalyticsController extends Controller
         # Проверить, отправляли ли мы ранее это события для этой сделки
         $check_on_double_event = CheckEventForDoubleByLeadForAnalyticsDto::run($lead_for_analytics_dto);
         if($check_on_double_event->isNotEmpty()){
-            die('событие уже было отправлено ранее');
-            throw new \Exception('Событие уже было отправлено ранее');
+            return new JsonResponse(['success' => true, 'data' => ['status' => 'Event was not send because it was sent earlier']]);
         }
 
         # Проверить наличие кастомного источника в полях ( убрать в CreateLeadForAnalyticsDto )
@@ -93,41 +104,20 @@ class AnalyticsController extends Controller
         }
 
 
-        # Создать объект для отправки в GA
-        $google_analytics_dto = CreateGoogleAnalyticsDtoByLeadForAnalyticsDto::run($lead_for_analytics_dto);
+        # Создать запрос для отправки
+        $google_analytics_request = CreateGA4EventByLeadForAnalyticsDto::run($lead_for_analytics_dto);
 
         # Отправить событие в GA
-        $response_ga = $google_analytics_dto->sendEvent();
-        $data_log['final_url_arr'] = explode('&', $response_ga->getRequestUrl());
+        $sendService = new Service(googleAnalyticsConfig::getApiKey(), googleAnalyticsConfig::getStreamId());
+        $result_send_response = $sendService->send($google_analytics_request);
 
         # Записать в базу статус отправки события для этой сделки
         AddEventLeadToDB::run($lead_for_analytics_dto);
 
         Logger::writeToLog($data_log,config('logging.dir_amo_analytics'));
 
-        # Создать объект для отправки в Facebook
-
-        /*
-        $api = Api::init(null, null, $data['token']);
-        $api->setLogger(new CurlLogger());
-
-        $facebook_events_dto = CreateFacebookEventsLeadForAnalyticsDto::run($lead_for_analytics_dto);
-
-        # Отправить событие в пиксели Facebook
-        try {
-            $request = (new EventRequest($fb_dto->getPixelId()))
-                ->setEvents($events);
-        } catch (\Exception $exception) {
-            $data_log['exception_set_event'] = $exception->getMessage();
-        }
-
-        try {
-            $data_log['request_fb'] = $request->execute();
-        } catch (\Exception $exception) {
-            $data_log['exception_set_request'] = $exception->getMessage();
-        }
-
-        */
-        # Записать в базу статус отправки события для этой сделки
+        return new JsonResponse(['success' => true, 'data' => [
+            'result' => $result_send_response->getData()]
+        ]);
     }
 }
