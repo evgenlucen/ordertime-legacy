@@ -7,7 +7,6 @@ use App\Services\AmoCRM\ApiClient\GetApiClient;
 use App\Services\AmoCRM\Lead\FindLeadBySalebotEventRequest;
 use App\Services\AmoCRM\Tag\AddTagsToLeadByLeadModel;
 use App\Services\Logger\Logger;
-use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
