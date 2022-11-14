@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Analytics;
 
 use App\Configs\googleAnalyticsConfig;
 use App\Http\Controllers\Controller;
+use App\Services\Analytics\GoogleAnalytics\Tasks\CreateGeneratedGaCid;
 use Br33f\Ga4\MeasurementProtocol\Dto\Common\EventCollection;
 use Br33f\Ga4\MeasurementProtocol\Dto\Common\UserProperties;
 use Br33f\Ga4\MeasurementProtocol\Dto\Common\UserProperty;
@@ -33,8 +34,12 @@ class GA4Controller extends Controller
         $user_params = $request->input('user_params') ?? null;
         $ga_client_id = $request->input('ga_client_id') ?? null;
 
+        if(null === $ga_client_id){
+            $ga_client_id = CreateGeneratedGaCid::run();
+        }
 
-        $request = new BaseRequest();
+
+        $request = new BaseRequest($ga_client_id);
 
         /** Event */
         $event = new BaseEvent($event_name);
