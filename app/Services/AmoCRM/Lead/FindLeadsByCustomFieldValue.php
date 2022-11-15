@@ -6,6 +6,7 @@ namespace App\Services\AmoCRM\Lead;
 
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Collections\Leads\LeadsCollection;
+use Exception;
 
 final class FindLeadsByCustomFieldValue
 {
@@ -14,9 +15,9 @@ final class FindLeadsByCustomFieldValue
      * @param $cf_id
      * @param $cf_value
      * @return LeadsCollection
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function run(AmoCRMApiClient $api_client, $cf_id, $cf_value)
+    public static function run(AmoCRMApiClient $api_client, $cf_id, $cf_value): LeadsCollection
     {
         $lead_collection = FindLeadsByQuery::run($api_client, $cf_value);
 

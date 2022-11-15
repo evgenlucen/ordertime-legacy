@@ -5,6 +5,7 @@ use App\Http\Controllers\AmoCRM\AmoSetPipelinesDataToDbController;
 use App\Http\Controllers\AmoCRM\AnalyticsController;
 use App\Http\Controllers\AmoCRM\AnalyticsControllerTest;
 use App\Http\Controllers\AmoCRM\Helpers\AddTagsController;
+use App\Http\Controllers\AmoCRM\Helpers\AddTaskController;
 use App\Http\Controllers\AmoCRM\Helpers\ChangeLeadStatus;
 use App\Http\Controllers\AmoCRM\Info\AmoInfo;
 use App\Http\Controllers\Bizon\ReportHandlerController;
@@ -31,6 +32,7 @@ Route::prefix('amocrm')->group(function(){
     Route::prefix('helper')->group(function(){
         Route::post('add-tags',[AddTagsController::class,'run']);
         Route::post('change-lead-status',[ChangeLeadStatus::class,'run']);
+        Route::post('add-task',[AddTaskController::class,'run']);
     });
 
     Route::get('test',function (){

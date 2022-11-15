@@ -15,20 +15,19 @@ final class GetLeadById
     /**
      * @param AmoCRMApiClient $api_client
      * @param int $lead_id
-     * @return LeadModel|bool|null
+     * @return LeadModel|null
      */
-    public static function run(AmoCRMApiClient $api_client, int $lead_id)
+    public static function run(AmoCRMApiClient $api_client, int $lead_id): ?LeadModel
     {
         try {
             $lead = $api_client->leads()->getOne($lead_id, [LeadModel::CONTACTS]);
-        } catch (AmoCRMMissedTokenException $e) {
-        } catch (AmoCRMoAuthApiException $e) {
+        } catch (AmoCRMMissedTokenException|AmoCRMoAuthApiException $e) {
         } catch (AmoCRMApiException $e) {
-            return false;
+            return null;
         }
 
         if(empty($lead)){
-            return false;
+            return null;
         } else {
             return $lead;
         }
