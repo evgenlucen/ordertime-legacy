@@ -24,48 +24,60 @@ class GA4Controller extends Controller
      * @throws HydrationException
      * @throws ValidationException
      */
-    public function run(Request $request): JsonResponse
+    public function run(Request $request)
     {
         $event_name = $request->input('event_name') ?? null;
 
-        Assert::notEmpty($event_name);
+        Assert::notEmpty($event_name,"Undefined event_name");
 
         $event_params = $request->input('event_params') ?? null;
         $user_params = $request->input('user_params') ?? null;
         $ga_client_id = $request->input('ga_client_id') ?? null;
+
 
         if(null === $ga_client_id){
             $ga_client_id = CreateGeneratedGaCid::run();
         }
 
 
-        $request = new BaseRequest($ga_client_id);
+        $request_to_ga = new BaseRequest($ga_client_id);
 
         /** Event */
         $event = new BaseEvent($event_name);
 
         if(null !== $event_params){
-            foreach ($event_params as $event_param){
-                $event->addParam($event_param['name'], new BaseParameter($event_param['value']));
+            foreach ($event_params as $name => $value){
+                $event->addParam($name, new BaseParameter($value));
             }
         }
 
-        $request->addEvent($event);
+        $request_to_ga->addEvent($event);
 
         /** User Params */
         if(null !== $user_params) {
             $userProperties = new UserProperties();
-            foreach ($user_params as $user_param){
+            foreach ($user_params as $name => $value){
                 $userProperties->addUserProperty(
-                    new UserProperty($user_param['name'], $user_param['value'])
+                    new UserProperty($name, $value)
                 );
             }
+            $request_to_ga->setUserProperties($userProperties);
         }
 
 
         $sendService = new Service(googleAnalyticsConfig::getApiKey(), googleAnalyticsConfig::getStreamId());
-        $result_send_response = $sendService->send($request);
+        $result_send_response = $sendService->send($request_to_ga);
 
-        return new JsonResponse(['success' => true, 'data' => [$result_send_response->getData()]]);
+        return new JsonResponse(
+            [
+                'success' => true,
+                'data' => [
+                    'code' => $result_send_response->getStatusCode(),
+                    'body' => $result_send_response->getBody(),
+                    'data' => $result_send_response->getData(),
+                    #'message' => $result_send_response->getValidationMessages()
+                ]
+            ]
+        );
     }
 }
