@@ -31,7 +31,7 @@ class DealDto
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $deal = [];
 
@@ -95,7 +95,7 @@ class DealDto
      * @param Request $request
      * @return DealDto
      */
-    public static function fromRequest(Request $request)
+    public static function fromRequest(Request $request): DealDto
     {
         $deal = new self();
 

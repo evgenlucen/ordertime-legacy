@@ -42,7 +42,7 @@ class amocrmConfig
     /* PIPELINES */
     public const PIPELINES_ID_FOR_UA = [6069535];
     public const PIPELINE_WORKED = 6069535;
-    public const PIPELINE_PAID = 6069535;
+    public const PIPELINE_PAID = 5174095; //не связана с автоворонкой
 
     /* STATUSES */
     /* Отдел доходимости */
@@ -55,6 +55,10 @@ class amocrmConfig
 
     public const STATUS_BOUNCE = 143;
 
+
+    /* Legacy pipeline */
+    public const LEGACY_STATUS_BUILD_SENT = 46331179;
+    public const LEGACY_STATUS_PARTIAL_PAYMENT_SUCCESS = 46331182;
 
 
     /* Отдел продаж */
