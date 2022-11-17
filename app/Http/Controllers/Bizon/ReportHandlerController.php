@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Bizon;
 
 use AmoCRM\Collections\Leads\LeadsCollection;
 use AmoCRM\Collections\NotesCollection;
+use AmoCRM\Exceptions\AmoCRMApiException;
+use AmoCRM\Exceptions\AmoCRMMissedTokenException;
+use AmoCRM\Exceptions\AmoCRMoAuthApiException;
+use AmoCRM\Exceptions\InvalidArgumentException;
 use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\NoteType\CommonNote;
 use App\Configs\bizonConfig;
@@ -24,6 +28,7 @@ use App\Services\Salebot\Actions\SalebotSendCallbackBySalebotByUserModel;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use slavkluev\Bizon365\Client;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 /**
@@ -33,6 +38,12 @@ use slavkluev\Bizon365\Client;
  */
 class ReportHandlerController extends Controller
 {
+    /**
+     * @throws InvalidArgumentException
+     * @throws AmoCRMApiException
+     * @throws AmoCRMMissedTokenException
+     * @throws AmoCRMoAuthApiException
+     */
     public function run(Request $request)
     {
         $bizon_client = new Client(bizonConfig::getApiKey());
@@ -121,10 +132,7 @@ class ReportHandlerController extends Controller
             $event_name = eventsConfig::getEventNameByUserMetaDto($user_model);
 
             if (empty($event_name)) {
-                $data_log['time_params'] = ['diff' => $diff, 'duration' => $user_model->getDurationInWebinar()];
-                $data_log['users_data'] = $user_model;
-                //Debuger::debug($data_log);
-                die();
+                return new JsonResponse(['success' =>false, 'error' => 'Event name not found' ]);
             }
 
             # Получить параметры действия по событию
@@ -195,7 +203,7 @@ class ReportHandlerController extends Controller
 
         Logger::writeToLog($data_log, config('logging.dir_bizon_reports'));
 
-        return "ok";
+        return new JsonResponse(['success' => true, 'data' => []]);
 
         //$data_log['leads_collection'] = $leads_colleciton->toArray();
         //$data_log['notes_collection'] = $notes_collection->toArray();
