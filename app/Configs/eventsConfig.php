@@ -40,18 +40,18 @@ class eventsConfig
         switch ($event_name) {
 
             //TODO CHANGE ME
-           /* case 'send_link_to_webinar':
-                $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
-                $amo_action->setStatusId(amocrmConfig::STATUS_SEND_WEBINAR_LINK);
-                $action_model->setAmocrmAction($amo_action);
-                break;*/
-           /* case 'click_link_webinar':
-                $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
-                $amo_action->setStatusId(amocrmConfig::STATUS_START_WEBINAR);
-                $action_model->setAmocrmAction($amo_action);
-                break;*/
+            /* case 'send_link_to_webinar':
+                 $amo_action = new AmoActionDto();
+                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                 $amo_action->setStatusId(amocrmConfig::STATUS_SEND_WEBINAR_LINK);
+                 $action_model->setAmocrmAction($amo_action);
+                 break;*/
+            /* case 'click_link_webinar':
+                 $amo_action = new AmoActionDto();
+                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                 $amo_action->setStatusId(amocrmConfig::STATUS_START_WEBINAR);
+                 $action_model->setAmocrmAction($amo_action);
+                 break;*/
             /*case 'visit_webinar':
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
@@ -93,16 +93,16 @@ class eventsConfig
                 $action_model->setAmocrmAction($amo_action);
 
                 break;*/
-            /*case 'deal_create':
+            case 'deal_create':
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
-                $amo_action->setStatusId(amocrmConfig::STATUS_FORM_SUBMIT);
-                $amo_action->setTags(['заявка']);
+                $amo_action->setStatusId(amocrmConfig::LEGACY_STATUS_BUILD_SENT);
+                $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
-                $salebot_action = new SalebotActionDto();
-                $salebot_action->message = 'deal_create';
-                $action_model->setSalebotAction($salebot_action);
-                break;*/
+//                $salebot_action = new SalebotActionDto();
+//                $salebot_action->message = 'deal_create';
+//                $action_model->setSalebotAction($salebot_action);
+                break;
             /*case 'form_submit':
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
@@ -119,6 +119,7 @@ class eventsConfig
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
                 $amo_action->setStatusId(amocrmConfig::LEGACY_STATUS_BUILD_SENT);
+                $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
                 break;
             case 'partial_payment_success':
@@ -126,6 +127,7 @@ class eventsConfig
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
                 $amo_action->setStatusId(amocrmConfig::LEGACY_STATUS_PARTIAL_PAYMENT_SUCCESS);
+                $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
                 break;
             case 'payment_success':
@@ -133,6 +135,7 @@ class eventsConfig
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
                 $amo_action->setStatusId(amocrmConfig::STATUS_PAID_SUCCESS);
+                $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
                 break;
             case 'bounce':
@@ -143,6 +146,7 @@ class eventsConfig
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
                 $amo_action->setStatusId(amocrmConfig::STATUS_BOUNCE);
+                $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
                 break;
             default:
