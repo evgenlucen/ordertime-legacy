@@ -111,8 +111,8 @@ class amocrmConfig
         return [
             'email' => ['id' => self::EMAIL_CF_ID, 'type' => 'text'],
             'phone' => ['id' => self::PHONE_CF_ID, 'type' => 'text'],
-            'user_id' => ['id' => self::CF_GC_USER_LINK, 'type' => 'text'],
-            'gc_user_link' => ['id' => self::CF_GC_USER_ID, 'type' => 'text'],
+            'user_id' => ['id' => self::CF_GC_USER_ID, 'type' => 'text'],
+            'gc_user_link' => ['id' => self::CF_GC_USER_LINK, 'type' => 'text'],
         ];
     }
 
