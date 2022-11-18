@@ -23,21 +23,14 @@ class bizonConfig {
      * @param string $webinar_name
      * @return WebinarConfigDto
      */
-    public static function getWebinarConfigDtoByWebinarName(string $webinar_name)
+    public static function getWebinarConfigDtoByWebinarName(string $webinar_name): WebinarConfigDto
     {
         $webinar_config = new WebinarConfigDto();
 
         switch ($webinar_name) {
-            //TODO CHANGE ME
-            case '116808:wd12':
-            case '116808:wd15':
-            case '116808:wd19':
-            case '116808:wd21':
+            case '138703:la9tu69l2r':
                 $webinar_config->setWebinarName($webinar_name);
-                $webinar_config->setSalesPartByMinutes(108);
-                $webinar_config->setContentPartDurationMin(30);
-                $webinar_config->setSalesPartDurationMin(20);
-                $webinar_config->setVisitWebinarDurationMin(1);
+                $webinar_config->setVisitWebinarDurationMin();
                 break;
         }
 
