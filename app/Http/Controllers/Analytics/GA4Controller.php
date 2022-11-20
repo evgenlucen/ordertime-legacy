@@ -75,6 +75,7 @@ class GA4Controller extends Controller
                     'code' => $result_send_response->getStatusCode(),
                     'body' => $result_send_response->getBody(),
                     'data' => $result_send_response->getData(),
+                    'ga_cid' => $ga_client_id
                     #'message' => $result_send_response->getValidationMessages()
                 ]
             ]
