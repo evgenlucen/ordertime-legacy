@@ -100,8 +100,8 @@ class EventController extends Controller
 
         }
 
-        if (!empty($action_params->getSalebotAction())) {
-            $salebot_result = SalebotSendCallback::run($salebot_id,$action_params->getSalebotAction());
+        if (!empty($action_params->getSalebotAction()) && null !== $salebot_id) {
+            $salebot_result = SalebotSendCallback::run((int)$salebot_id,$action_params->getSalebotAction());
         }
 
         $data_log['request'] = $request->all();
