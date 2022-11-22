@@ -16,6 +16,7 @@ use App\Services\AmoCRM\Pipelines\Statuses\GetPriorityStatusByLeadModel;
 use App\Services\Bizon\Report\Tasks\GetPriorityStatusByAmoActionDto;
 use App\Services\Debug\Debuger;
 use App\Services\Logger\Logger;
+use App\Services\Salebot\Actions\SalebotSendCallback;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -99,6 +100,10 @@ class EventController extends Controller
 
         }
 
+        if (!empty($action_params->getSalebotAction())) {
+            $salebot_result = SalebotSendCallback::run($salebot_id,$action_params->getSalebotAction());
+        }
+
         $data_log['request'] = $request->all();
         $data_log['lead'] = $lead->toArray() ?? 'lead not found';
         $data_log['action'] = $action_params->getAmocrmAction()->toArray();
@@ -106,6 +111,10 @@ class EventController extends Controller
         $result = [];
         if (!empty($lead)){ $result['lead_id'] = $lead->getId(); }
         $result['action'] = $action_params->toArray();
+
+        if(!empty($salebot_result)){
+            $result['salebot_response'] = $salebot_result;
+        }
 
         Logger::writeToLog($data_log,config('logging.dir_event'));
 
