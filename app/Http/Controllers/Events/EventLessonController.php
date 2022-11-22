@@ -106,6 +106,8 @@ class EventLessonController extends Controller
                 $cf_collection->add($cf_city);
                 $cf_collection->add($cf_utc);
 
+                $lead->setCustomFieldsValues($cf_collection);
+
 
                 $lead = UpdateLeadByLeadModel::run($api_client, $lead);
             }
