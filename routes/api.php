@@ -6,7 +6,7 @@ use App\Http\Controllers\AmoCRM\LeadController;
 use App\Http\Controllers\Analytics\GA4Controller;
 use App\Http\Controllers\Bizon\ReportHandlerController;
 use App\Http\Controllers\Bizon\WebinarController;
-use App\Http\Controllers\Events\EventSalebotController;
+use App\Http\Controllers\Events\EventController;
 use App\Http\Controllers\LeadCollect\LeadCollectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('events')->group(function(){
-    Route::post('salebot',[EventSalebotController::class,'run']);
+    Route::post('salebot',[EventController::class,'run']);
 });
 
 Route::prefix('tilda')->group(function(){

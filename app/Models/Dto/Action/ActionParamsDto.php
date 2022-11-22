@@ -9,6 +9,15 @@ class ActionParamsDto
     public ?AmoActionDto $amocrm_action = null;
     public ?SalebotActionDto $salebot_action = null;
 
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'amo_action' => $this->getAmocrmAction()->toArray(),
+            'salebot_action' => $this->getSalebotAction()->toArray()
+        ];
+    }
+
     /**
      * @return string
      */

@@ -11,7 +11,7 @@ use App\Http\Controllers\AmoCRM\Info\AmoInfo;
 use App\Http\Controllers\Bizon\ReportHandlerController;
 use App\Http\Controllers\Events\EventGetcourseDealController;
 use App\Http\Controllers\Events\EventGetcourseUserController;
-use App\Http\Controllers\Events\EventSalebotController;
+use App\Http\Controllers\Events\EventController;
 use App\Services\Analytics\GoogleAnalytics\GetStatusNameByStatusIdAndPipelineId;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -50,7 +50,7 @@ Route::prefix('events')->group(function(){
         Route::post('deal_events',[EventGetcourseDealController::class,'run']);
         Route::post('user_events',[EventGetcourseUserController::class,'run']);
     });
-    Route::post('salebot',[EventSalebotController::class,'run']);
+    Route::post('salebot',[EventController::class,'run']);
 });
 
 Route::prefix('test')->group(function(){

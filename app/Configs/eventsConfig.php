@@ -46,6 +46,39 @@ class eventsConfig
                  $amo_action->setStatusId(amocrmConfig::STATUS_SEND_WEBINAR_LINK);
                  $action_model->setAmocrmAction($amo_action);
                  break;*/
+             case 'view_lesson_1':
+                 $amo_action = new AmoActionDto();
+                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                 $amo_action->setStatusId(amocrmConfig::STATUS_OPEN_1_LESSON);
+                 $action_model->setAmocrmAction($amo_action);
+                 $salebot_action = new SalebotActionDto();
+
+                 $salebot_action->message = $event_name;
+                 $salebot_action->vars = ['is_'.$event_name => 'true'];
+                 $action_model->setSalebotAction($salebot_action);
+                 break;
+            case 'view_lesson_2':
+                $amo_action = new AmoActionDto();
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setStatusId(amocrmConfig::STATUS_OPEN_2_LESSON);
+                $action_model->setAmocrmAction($amo_action);
+
+                $salebot_action = new SalebotActionDto();
+                $salebot_action->message = $event_name;
+                $salebot_action->vars = ['is_'.$event_name => 'true'];
+                $action_model->setSalebotAction($salebot_action);
+                break;
+            case 'view_lesson_3':
+                $amo_action = new AmoActionDto();
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setStatusId(amocrmConfig::STATUS_OPEN_3_LESSON);
+                $action_model->setAmocrmAction($amo_action);
+
+                $salebot_action = new SalebotActionDto();
+                $salebot_action->message = $event_name;
+                $salebot_action->vars = ['is_'.$event_name => 'true'];
+                $action_model->setSalebotAction($salebot_action);
+                break;
             /* case 'click_link_webinar':
                  $amo_action = new AmoActionDto();
                  $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
