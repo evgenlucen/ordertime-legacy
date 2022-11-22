@@ -31,6 +31,8 @@ class AddTaskController extends Controller
         $salebot_id = $request->input('salebot_id') ?? null;
         $task_type = $request->input('task_type') ?? 1;
 
+        $execution_time_in_hour = $request->input('execution_time_in_hour') ?? 1;
+
         $api_client = GetApiClient::getApiClient();
         $lead = GetLeadById::run($api_client, $amo_lead_id);
         if(null === $lead && null !== $salebot_id) {
@@ -49,7 +51,7 @@ class AddTaskController extends Controller
         $taskModel->setText($text_task);
         $taskModel->setEntityId($lead->getId());
         $taskModel->setEntityType(EntityTypesInterface::LEADS);
-        $taskModel->setCompleteTill((new DateTimeImmutable())->getTimestamp() + 60*60);
+        $taskModel->setCompleteTill((new DateTimeImmutable())->getTimestamp() + $execution_time_in_hour*60*60);
         $taskModel->setTaskTypeId($task_type);
 
         $result = $api_client->tasks()->addOne($taskModel);
