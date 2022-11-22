@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('events')->group(function(){
-    Route::post('salebot',[EventController::class,'run']);
+    Route::post('event',[EventController::class,'run']);
 });
 
 Route::prefix('tilda')->group(function(){

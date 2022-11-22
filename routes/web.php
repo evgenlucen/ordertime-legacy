@@ -50,7 +50,6 @@ Route::prefix('events')->group(function(){
         Route::post('deal_events',[EventGetcourseDealController::class,'run']);
         Route::post('user_events',[EventGetcourseUserController::class,'run']);
     });
-    Route::post('salebot',[EventController::class,'run']);
 });
 
 Route::prefix('test')->group(function(){
