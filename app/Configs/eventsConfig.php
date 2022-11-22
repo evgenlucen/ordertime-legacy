@@ -50,33 +50,54 @@ class eventsConfig
                  $amo_action = new AmoActionDto();
                  $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
                  $amo_action->setStatusId(amocrmConfig::STATUS_OPEN_1_LESSON);
+                 $amo_action->setTags(['Открыл 1 урок']);
                  $action_model->setAmocrmAction($amo_action);
                  $salebot_action = new SalebotActionDto();
 
                  $salebot_action->message = $event_name;
-                 $salebot_action->vars = ['is_'.$event_name => 'true'];
+                 $salebot_action->vars = [
+                     'is_'.$event_name => 'true',
+                     'ip' => $_SERVER['REDIRECT_GEOIP_ADDR'],
+                     'city' => $_SERVER['REDIRECT_GEOIP_CITY'],
+                     'country' => $_SERVER['REDIRECT_GEOIP_COUNTRY_NAME'],
+                     'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                     ];
                  $action_model->setSalebotAction($salebot_action);
                  break;
             case 'view_lesson_2':
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
                 $amo_action->setStatusId(amocrmConfig::STATUS_OPEN_2_LESSON);
+                $amo_action->setTags(['Открыл 2 урок']);
                 $action_model->setAmocrmAction($amo_action);
 
                 $salebot_action = new SalebotActionDto();
                 $salebot_action->message = $event_name;
-                $salebot_action->vars = ['is_'.$event_name => 'true'];
+                $salebot_action->vars = [
+                    'is_'.$event_name => 'true',
+                    'ip' => $_SERVER['REDIRECT_GEOIP_ADDR'],
+                    'city' => $_SERVER['REDIRECT_GEOIP_CITY'],
+                    'country' => $_SERVER['REDIRECT_GEOIP_COUNTRY_NAME'],
+                    'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                ];
                 $action_model->setSalebotAction($salebot_action);
                 break;
             case 'view_lesson_3':
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
                 $amo_action->setStatusId(amocrmConfig::STATUS_OPEN_3_LESSON);
+                $amo_action->setTags(['Открыл 3 урок']);
                 $action_model->setAmocrmAction($amo_action);
 
                 $salebot_action = new SalebotActionDto();
                 $salebot_action->message = $event_name;
-                $salebot_action->vars = ['is_'.$event_name => 'true'];
+                $salebot_action->vars = [
+                    'is_'.$event_name => 'true',
+                    'ip' => $_SERVER['REDIRECT_GEOIP_ADDR'],
+                    'city' => $_SERVER['REDIRECT_GEOIP_CITY'],
+                    'country' => $_SERVER['REDIRECT_GEOIP_COUNTRY_NAME'],
+                    'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                ];
                 $action_model->setSalebotAction($salebot_action);
                 break;
             /* case 'click_link_webinar':

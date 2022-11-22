@@ -7,7 +7,7 @@ class AmoActionDto implements ActionInterface
 {
     public ?int $status_id = null;
     public ?int $pipeline_id = null;
-    public ?int $cf_id = null;
+    public ?array $cf_data = [];
     public ?array $tags = [];
     public ?string $service_message = '';
     public ?int $responsible_user_id = null;
@@ -73,21 +73,6 @@ class AmoActionDto implements ActionInterface
         $this->pipeline_id = $pipeline_id;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getCfId(): ?int
-    {
-        return $this->cf_id;
-    }
-
-    /**
-     * @param int|null $cf_id
-     */
-    public function setCfId(?int $cf_id): void
-    {
-        $this->cf_id = $cf_id;
-    }
 
     /**
      * @return array|null
@@ -135,6 +120,22 @@ class AmoActionDto implements ActionInterface
     public function setResponsibleUserId(?int $responsible_user_id): void
     {
         $this->responsible_user_id = $responsible_user_id;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getCfData(): ?array
+    {
+        return $this->cf_data;
+    }
+
+    /**
+     * @param array|null $cf_data
+     */
+    public function setCfData(?array $cf_data): void
+    {
+        $this->cf_data = $cf_data;
     }
 
 

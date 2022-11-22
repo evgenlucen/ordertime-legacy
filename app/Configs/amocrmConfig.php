@@ -11,6 +11,9 @@ class amocrmConfig
     public const SB_CF_ID = 976075;
     public const DSM_CF_IF = '';
     public const CF_ID_PRODUCT_NAME = 976177;
+    public const CF_ID_COUNTRY = 972495;
+    public const CF_ID_CITY = 972497;
+    public const CF_ID_UTC = 972499;
 
     /* ANALYTICS MARKUP */
     public const FBP_CF_ID = 976191;

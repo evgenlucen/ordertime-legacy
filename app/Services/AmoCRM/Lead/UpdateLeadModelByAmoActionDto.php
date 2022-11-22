@@ -16,7 +16,7 @@ class UpdateLeadModelByAmoActionDto
      * @param AmoActionDto $amo_action
      * @return LeadModel
      */
-    public static function run(LeadModel $lead_model, AmoActionDto $amo_action)
+    public static function run(LeadModel $lead_model, AmoActionDto $amo_action): LeadModel
     {
 
         if (!empty($amo_action->getStatusId())) {
