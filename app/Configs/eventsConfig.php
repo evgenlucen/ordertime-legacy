@@ -20,7 +20,6 @@ class eventsConfig
     public static function getEventNameByUserMetaDto(UserMetaDto $user): ?string
     {
 
-        //TODO CHANGE ME
         if ($user->getIsViewSalesPart()) {
             return 'view_sales_part';
         } elseif ($user->getIsViewContentPart()) {
@@ -39,14 +38,7 @@ class eventsConfig
 
         switch ($event_name) {
 
-            //TODO CHANGE ME
-            /* case 'send_link_to_webinar':
-                 $amo_action = new AmoActionDto();
-                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
-                 $amo_action->setStatusId(amocrmConfig::STATUS_SEND_WEBINAR_LINK);
-                 $action_model->setAmocrmAction($amo_action);
-                 break;*/
-             case 'view_lesson_1':
+            case 'view_lesson_1':
                  $amo_action = new AmoActionDto();
                  $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
                  $amo_action->setStatusId(amocrmConfig::STATUS_OPEN_1_LESSON);
@@ -100,26 +92,6 @@ class eventsConfig
                 ];
                 $action_model->setSalebotAction($salebot_action);
                 break;
-            /* case 'click_link_webinar':
-                 $amo_action = new AmoActionDto();
-                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
-                 $amo_action->setStatusId(amocrmConfig::STATUS_START_WEBINAR);
-                 $action_model->setAmocrmAction($amo_action);
-                 break;*/
-            /*case 'visit_webinar':
-                $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
-                $amo_action->setStatusId(amocrmConfig::STATUS_START_WEBINAR);
-                $amo_action->setTags(['вебинар']);
-                $action_model->setAmocrmAction($amo_action);
-                break;*/
-            /*case 'click_link_record_webinar':
-                $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
-                $amo_action->setStatusId(amocrmConfig::STATUS_OPENED_RECORD_WEBINAR);
-                $amo_action->setTags(['запись']);
-                $action_model->setAmocrmAction($amo_action);
-                break;*/
             case 'view_content_part':
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
@@ -139,34 +111,16 @@ class eventsConfig
                 $amo_action->setServiceMessage('Посещение продающей страницы');
                 $action_model->setAmocrmAction($amo_action);
                 break;
-            /*case 'written_key_lesson_course':
-                $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
-                $amo_action->setStatusId(amocrmConfig::STATUS_ALL_LEADS);
-                $amo_action->setTags(['курс']);
-                $action_model->setAmocrmAction($amo_action);
-
-                break;*/
             case 'deal_create':
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
                 $amo_action->setStatusId(amocrmConfig::LEGACY_STATUS_BUILD_SENT);
                 $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
-//                $salebot_action = new SalebotActionDto();
-//                $salebot_action->message = 'deal_create';
-//                $action_model->setSalebotAction($salebot_action);
-                break;
-            /*case 'form_submit':
-                $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
-                $amo_action->setStatusId(amocrmConfig::STATUS_ALL_LEADS);
-                $amo_action->setTags(['заявка']);
-                $action_model->setAmocrmAction($amo_action);
                 $salebot_action = new SalebotActionDto();
-                $salebot_action->message = 'form_submit';
+                $salebot_action->message = 'deal_create';
                 $action_model->setSalebotAction($salebot_action);
-                break;*/
+                break;
             case 'Новый':
             case 'В работе':
             case 'Ожидаем оплаты':
@@ -207,6 +161,7 @@ class eventsConfig
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
                 $amo_action->setStatusId(amocrmConfig::STATUS_ALL_LEADS);
+                $amo_action->setServiceMessage('Error: Не удалось распознать событие');
                 break;
         }
 
