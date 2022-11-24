@@ -134,7 +134,7 @@ class EventLessonController extends Controller
             $result['salebot_response'] = $salebot_result;
         }
 
-        Logger::writeToLog($data_log,config('logging.dir_event'));
+        Logger::writeToLog($data_log,config('logging.dir_event_lesson'));
 
         return new JsonResponse([
             'success' => true,
