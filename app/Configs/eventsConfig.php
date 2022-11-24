@@ -31,7 +31,7 @@ class eventsConfig
         return 'visit_webinar';
     }
 
-    public static function getActionParamsDtoByEventName(string $event_name): ActionParamsDto
+    public static function getActionParamsDtoByEventName(string $event_name): ?ActionParamsDto
     {
         $action_model = new ActionParamsDto();
         $action_model->setName($event_name);
@@ -80,6 +80,26 @@ class eventsConfig
                 $amo_action->setStatusId(amocrmConfig::STATUS_OPEN_3_LESSON);
                 $amo_action->setTags(['Открыл 3 урок']);
                 $action_model->setAmocrmAction($amo_action);
+
+                $salebot_action = new SalebotActionDto();
+                $salebot_action->message = $event_name;
+                $salebot_action->vars = [
+                    'is_'.$event_name => 'true',
+                    'ip' => $_SERVER['REDIRECT_GEOIP_ADDR'],
+                    'city' => $_SERVER['REDIRECT_GEOIP_CITY'],
+                    'country' => $_SERVER['REDIRECT_GEOIP_COUNTRY_NAME'],
+                    'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                ];
+                $action_model->setSalebotAction($salebot_action);
+                break;
+            case 'view_lesson_webinar_rec':
+                $amo_action = new AmoActionDto();
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setStatusId(amocrmConfig::STATUS_OPENING_WEB);
+                $amo_action->setTags(['Смотрел запись веба']);
+                $amo_action->setServiceMessage('Просмотрена запись вебинара');
+                $action_model->setAmocrmAction($amo_action);
+
 
                 $salebot_action = new SalebotActionDto();
                 $salebot_action->message = $event_name;
@@ -158,10 +178,7 @@ class eventsConfig
                 $action_model->setAmocrmAction($amo_action);
                 break;
             default:
-                $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
-                $amo_action->setStatusId(amocrmConfig::STATUS_ALL_LEADS);
-                $amo_action->setServiceMessage('Error: Не удалось распознать событие');
+                $action_model = null;
                 break;
         }
 

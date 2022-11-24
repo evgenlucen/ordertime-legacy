@@ -51,6 +51,10 @@ class EventLessonController extends Controller
         # Получить параметры действий по имени события
         $action_params = eventsConfig::getActionParamsDtoByEventName($event_name);
 
+        if (null === $action_params) {
+            return new JsonResponse(['success' => false, 'error' => 'Not found config for event_name' . (string)$event_name]);
+        }
+
         # Действия в AmoCRM
         if (!empty($action_params->getAmocrmAction())) {
 
@@ -116,6 +120,8 @@ class EventLessonController extends Controller
                 SendServiceMessageToLead::run($api_client, $action_params->getAmocrmAction()->getServiceMessage(), $lead->getId());
             }
 
+            $data_log['lead'] = $lead->toArray() ?? 'lead not found';
+
         }
 
         if (!empty($action_params->getSalebotAction()) && null !== $salebot_id) {
@@ -123,8 +129,7 @@ class EventLessonController extends Controller
         }
 
         $data_log['request'] = $request->all();
-        $data_log['lead'] = $lead->toArray() ?? 'lead not found';
-        $data_log['action'] = $action_params->getAmocrmAction()->toArray();
+
 
         $result = [];
         if (!empty($lead)){ $result['lead_id'] = $lead->getId(); }
