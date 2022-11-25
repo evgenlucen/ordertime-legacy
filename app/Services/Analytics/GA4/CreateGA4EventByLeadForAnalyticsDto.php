@@ -29,6 +29,8 @@ class CreateGA4EventByLeadForAnalyticsDto
         $event->addParam(self::PARAM_STATUS_NAME, new BaseParameter($leadForAnalyticsDto->getStatusName()));
         $event->addParam(self::PARAM_STATUS_ID, new BaseParameter($leadForAnalyticsDto->getStatusId()));
 
+        $eventsCollection->addEvent($event);
+
         $baseRequest = new BaseRequest($leadForAnalyticsDto->getGoogleClientId(),$eventsCollection);
 
         $userPropertiesCollection = new UserProperties();

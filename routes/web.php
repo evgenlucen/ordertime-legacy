@@ -8,14 +8,10 @@ use App\Http\Controllers\AmoCRM\Helpers\AddTagsController;
 use App\Http\Controllers\AmoCRM\Helpers\AddTaskController;
 use App\Http\Controllers\AmoCRM\Helpers\ChangeLeadStatus;
 use App\Http\Controllers\AmoCRM\Info\AmoInfo;
-use App\Http\Controllers\Bizon\ReportHandlerController;
 use App\Http\Controllers\Events\EventGetcourseDealController;
 use App\Http\Controllers\Events\EventGetcourseUserController;
-use App\Http\Controllers\Events\EventController;
 use App\Services\Analytics\GoogleAnalytics\GetStatusNameByStatusIdAndPipelineId;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
 
 
 #Route::get('/{any}',[\App\Http\Controllers\SpaController::class,'index'])->where('any',".*");

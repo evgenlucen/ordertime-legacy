@@ -27,6 +27,7 @@ use Br33f\Ga4\MeasurementProtocol\Service;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use function Psy\debug;
 
 class AnalyticsController extends Controller
 {
@@ -89,6 +90,7 @@ class AnalyticsController extends Controller
         $data_log['status_name'] = $status_name;
         $lead_for_analytics_dto->setStatusName($status_name);
 
+
         # Проверить, отправляли ли мы ранее это события для этой сделки
         $check_on_double_event = CheckEventForDoubleByLeadForAnalyticsDto::run($lead_for_analytics_dto);
         if($check_on_double_event->isNotEmpty()){
@@ -104,8 +106,13 @@ class AnalyticsController extends Controller
         }
 
 
+
+
         # Создать запрос для отправки
         $google_analytics_request = CreateGA4EventByLeadForAnalyticsDto::run($lead_for_analytics_dto);
+
+/*        echo "<pre>" . print_r($google_analytics_request,1) . "</pre>";
+        die();*/
 
         # Отправить событие в GA
         $sendService = new Service(googleAnalyticsConfig::getApiKey(), googleAnalyticsConfig::getStreamId());
@@ -116,8 +123,14 @@ class AnalyticsController extends Controller
 
         Logger::writeToLog($data_log,config('logging.dir_amo_analytics'));
 
-        return new JsonResponse(['success' => true, 'data' => [
-            'result' => $result_send_response->getData()]
+        return new JsonResponse([
+            'success' => true,
+            'data' => [
+                'code' => $result_send_response->getStatusCode(),
+                'body' => $result_send_response->getBody(),
+                'data' => $result_send_response->getData(),
+                'ga_cid' => $lead_for_analytics_dto->getGoogleClientId()
+            ]
         ]);
     }
 }

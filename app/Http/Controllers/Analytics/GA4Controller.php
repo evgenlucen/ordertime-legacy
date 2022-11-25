@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Analytics;
 use App\Configs\googleAnalyticsConfig;
 use App\Http\Controllers\Controller;
 use App\Services\Analytics\GoogleAnalytics\Tasks\CreateGeneratedGaCid;
-use Br33f\Ga4\MeasurementProtocol\Dto\Common\EventCollection;
 use Br33f\Ga4\MeasurementProtocol\Dto\Common\UserProperties;
 use Br33f\Ga4\MeasurementProtocol\Dto\Common\UserProperty;
 use Br33f\Ga4\MeasurementProtocol\Dto\Event\BaseEvent;
@@ -24,7 +23,7 @@ class GA4Controller extends Controller
      * @throws HydrationException
      * @throws ValidationException
      */
-    public function run(Request $request)
+    public function run(Request $request): JsonResponse
     {
         $event_name = $request->input('event_name') ?? null;
 

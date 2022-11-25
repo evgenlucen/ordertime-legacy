@@ -12,6 +12,7 @@ use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\NoteType\CommonNote;
 use App\Configs\bizonConfig;
 use App\Configs\eventsConfig;
+use App\Models\Dto\Bizon\UserMetaDto;
 use App\Models\Dto\Bizon\WebinarReportDto;
 use App\Services\AmoCRM\ApiClient\GetApiClient;
 use App\Services\AmoCRM\Lead\GetLeadByBizonUserMetaDto;
@@ -43,6 +44,7 @@ class ReportHandlerController extends Controller
      * @throws AmoCRMApiException
      * @throws AmoCRMMissedTokenException
      * @throws AmoCRMoAuthApiException
+     * @throws \Exception
      */
     public function run(Request $request)
     {
@@ -81,6 +83,7 @@ class ReportHandlerController extends Controller
         $notes_collection = new NotesCollection();
 
         $i = 0;
+        /** @var UserMetaDto $user_model */
         foreach ($users_meta_collection as $user_model) {
 
             $lead = GetLeadByBizonUserMetaDto::run($api_client, $user_model);
