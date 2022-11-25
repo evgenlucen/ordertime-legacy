@@ -11,7 +11,7 @@ class GetValueCustomFieldByCfId
     /**
      * @param CustomFieldsValuesCollection $custom_fields
      * @param $cf_id
-     * @return array|bool|int|mixed|object|string
+     * @return array|bool|int|object|string
      */
     public static function run(CustomFieldsValuesCollection $custom_fields,$cf_id)
     {
@@ -26,7 +26,7 @@ class GetValueCustomFieldByCfId
             }
         }
 
-        return false;
+        return null;
 
     }
 

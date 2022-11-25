@@ -12,7 +12,7 @@ class GetValueCustomFieldByCode
     /**
      * @param CustomFieldsValuesCollection $custom_fields
      * @param $code
-     * @return array|bool|int|mixed|object|string
+     * @return array|bool|int|object|string
      */
     public static function run(CustomFieldsValuesCollection $custom_fields,$code)
     {
@@ -27,7 +27,7 @@ class GetValueCustomFieldByCode
             }
         }
 
-        return false;
+        return null;
 
     }
 }
