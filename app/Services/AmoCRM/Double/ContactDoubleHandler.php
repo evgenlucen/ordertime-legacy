@@ -14,6 +14,8 @@ use App\Services\AmoCRM\Contact\GetContactById;
 use App\Services\AmoCRM\CustomFields\GetValueCustomFieldByCode;
 use App\Services\AmoCRM\Helper\GetUniqModelIdsByCollection;
 use App\Services\AmoCRM\Helper\MergeCollections;
+use App\Services\AmoCRM\Helper\PhoneClear;
+use App\Services\AmoCRM\Task\CreateDoubleTask;
 
 class ContactDoubleHandler
 {
@@ -51,19 +53,44 @@ class ContactDoubleHandler
             $contactsByPhone = FindContactsByPhone::run($amoApiClient,$phone);
             if (null !== $contactsByPhone) {
                 $contacts = MergeCollections::run($contacts,$contactsByPhone);
+                $isFindByPhone = true;
             }
         }
         if(null !== $email) {
             $contactsByEmail = FindContactsListByCustomField::run($amoApiClient,$email,amocrmConfig::EMAIL_CF_ID);
             if (null !== $contactsByEmail) {
                 $contacts = MergeCollections::run($contacts,$contactsByEmail);
+                $isFindByEmail = true;
             }
         }
 
         $uniqContactIds = GetUniqModelIdsByCollection::run($contacts);
 
-        if (\count($uniqContactIds) > 1){
+        if (\count($uniqContactIds) > 1) {
+
             # set antidouble Task.
+            $result = [];
+            if (!empty($isFindByPhone)) {
+                $result['task_by_phone'] = CreateDoubleTask::contact(
+                    $amoApiClient,
+                    PhoneClear::run($phone),
+                    array_shift($uniqContactIds),
+                    amocrmConfig::TASK_TYPE_DOUBLE_CONTACT
+                )->getId();
+            }
+            if (!empty($isFindByEmail)) {
+                $result['task_by_email'] = CreateDoubleTask::contact(
+                    $amoApiClient,
+                    PhoneClear::run($email),
+                    array_shift($uniqContactIds),
+                    amocrmConfig::TASK_TYPE_DOUBLE_CONTACT
+                )->getId();
+            }
+
+            return $result;
+
+        } else {
+            return 'Not found double contact';
         }
     }
 

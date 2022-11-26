@@ -3,28 +3,38 @@
 namespace App\Http\Controllers\AmoCRM;
 
 
+use AmoCRM\Exceptions\AmoCRMApiException;
+use AmoCRM\Exceptions\AmoCRMMissedTokenException;
+use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use AmoCRM\Helpers\EntityTypesInterface;
 use App\Services\AmoCRM\Double\ContactDoubleHandler;
 use App\Services\AmoCRM\Webhook\GetModelIdByWebhook;
 use App\Services\AmoCRM\Webhook\GetModelTypeByWebhook;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class AmoAntiDouble extends Controller
 {
-    public function run(Request $request)
+    /**
+     * @throws AmoCRMApiException
+     * @throws AmoCRMoAuthApiException
+     * @throws AmoCRMMissedTokenException
+     */
+    public function run(Request $request): JsonResponse
     {
         # TODO List
         # Получить тип вебхука (создание сделки, удаление неразобранного, создание контакта)
         $modelType = GetModelTypeByWebhook::run($request);
         $ids = GetModelIdByWebhook::run($request,$modelType);
         # Передать id сущности для обработки в специализированный для сущности сервис
+
         if ($modelType === EntityTypesInterface::LEADS){
 
             # сервис обработки дублей для сделок
-            foreach ($ids as $leadId){
-                #$result = LeadDoubleHandler::run($leadId);
-            }
+//            foreach ($ids as $leadId){
+//                #$result = LeadDoubleHandler::run($leadId);
+//            }
 
         } elseif ($modelType === EntityTypesInterface::CONTACTS){
             # сервис обработки дублей контактов
@@ -33,11 +43,21 @@ class AmoAntiDouble extends Controller
             }
         } elseif ($modelType == EntityTypesInterface::COMPANIES) {
             # обработка дублей компаний
-            foreach ($ids as $companyId){
-                #$result = CompanyDoubleHandler::run($companyId);
-            }
+//            foreach ($ids as $companyId){
+//                #$result = CompanyDoubleHandler::run($companyId);
+//            }
+        } else {
+            $result = 'not supported model type';
         }
         # вернуть ответ
+        return new JsonResponse([
+            'success' => true,
+            'data' => [
+                'model_type' => $modelType,
+                'ids' => $ids,
+                'result' => $result
+            ]
+        ]);
     }
 
 }

@@ -84,13 +84,15 @@ class amocrmConfig
 
     /** SERVICE MESSAGE */
     public const NAME_SERVICE_MESSAGE = "EngineTun";
+    public const TASK_TYPE_DOUBLE_CONTACT = 2716338;
+    public const TASK_TYPE_DOUBLE_LEAD = 2716342;
 
 
     /**
      * В ключе - имя переменной из входящего массива
      * @return string[][]
      */
-    public static function getCfNameIdMapLead()
+    public static function getCfNameIdMapLead(): array
     {
         return [
             'gc_deal_link' => ['id' => self::CF_GC_DEAL_LINK, 'type' => 'text'],
@@ -109,7 +111,7 @@ class amocrmConfig
         ];
     }
 
-    public static function getCfNameIdMapContact()
+    public static function getCfNameIdMapContact(): array
     {
         return [
             'email' => ['id' => self::EMAIL_CF_ID, 'type' => 'text'],

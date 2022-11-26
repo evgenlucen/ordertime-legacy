@@ -14,9 +14,8 @@ class AmoInfoGetAccount
     public static function run(AmoCRMApiClient $api_client)
     {
         try {
-            return $api_client->account()->getCurrent();
-        } catch (AmoCRMMissedTokenException $e) {
-        } catch (AmoCRMoAuthApiException $e) {
+            return $api_client->account()->getCurrent(['task_types'])->toArray();
+        } catch (AmoCRMMissedTokenException|AmoCRMoAuthApiException $e) {
         } catch (AmoCRMApiException $e) {
             dd($e);
         }
