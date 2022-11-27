@@ -27,7 +27,6 @@ use Br33f\Ga4\MeasurementProtocol\Service;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use function Psy\debug;
 
 class AnalyticsController extends Controller
 {
@@ -116,7 +115,9 @@ class AnalyticsController extends Controller
 
         # Отправить событие в GA
         $sendService = new Service(googleAnalyticsConfig::getApiKey(), googleAnalyticsConfig::getStreamId());
-        $result_send_response = $sendService->send($google_analytics_request);
+        $result_send_request = $sendService->send($google_analytics_request);
+        $data_log['google_analytics_request'] = $google_analytics_request;
+        $data_log['result_ga_request'] = $result_send_request;
 
         # Записать в базу статус отправки события для этой сделки
         AddEventLeadToDB::run($lead_for_analytics_dto);
@@ -126,9 +127,9 @@ class AnalyticsController extends Controller
         return new JsonResponse([
             'success' => true,
             'data' => [
-                'code' => $result_send_response->getStatusCode(),
-                'body' => $result_send_response->getBody(),
-                'data' => $result_send_response->getData(),
+                'code' => $result_send_request->getStatusCode(),
+                'body' => $result_send_request->getBody(),
+                'data' => $result_send_request->getData(),
                 'ga_cid' => $lead_for_analytics_dto->getGoogleClientId()
             ]
         ]);
