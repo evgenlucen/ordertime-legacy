@@ -8,6 +8,7 @@ use AmoCRM\Exceptions\AmoCRMMissedTokenException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\TaskModel;
+use function Psy\debug;
 
 class CreateDoubleTask
 {
@@ -27,10 +28,11 @@ class CreateDoubleTask
         $accountDomain = $apiClient->getAccountBaseDomain();
 
         $textTask = sprintf(
-            "Найден дубль контакта: https://%s.amocrm.ru/contacts/list/contacts/?term=%s",
+            "Найден дубль контакта: https://%s/contacts/list/contacts/?term=%s",
             $accountDomain,
             $query
         );
+
 
         $taskModel = new TaskModel();
         $taskModel->setText($textTask);
@@ -58,7 +60,7 @@ class CreateDoubleTask
         $accountDomain = $apiClient->getAccountBaseDomain();
 
         $textTask = sprintf(
-            "Найден дубль сделки: https://%s.amocrm.ru/leads/list/?term=%s",
+            "Найден дубль сделки: https://%s/leads/list/?term=%s",
             $accountDomain,
             $query
         );

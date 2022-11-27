@@ -81,7 +81,7 @@ class ContactDoubleHandler
             if (!empty($isFindByEmail)) {
                 $result['task_by_email'] = CreateDoubleTask::contact(
                     $amoApiClient,
-                    PhoneClear::run($email),
+                    trim($email),
                     array_shift($uniqContactIds),
                     amocrmConfig::TASK_TYPE_DOUBLE_CONTACT
                 )->getId();

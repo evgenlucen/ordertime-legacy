@@ -4,13 +4,13 @@
 namespace App\Services\AmoCRM\Contact;
 
 
-use amo\Handler\Filter\FilterContactsByCustomFieldValue;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Collections\ContactsCollection;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use AmoCRM\Filters\ContactsFilter;
 use AmoCRM\Models\ContactModel;
+use App\Services\AmoCRM\Filter\FilterContactsByCustomFieldValue;
 use Exception;
 use Webmozart\Assert\Assert;
 

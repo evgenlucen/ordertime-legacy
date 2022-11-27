@@ -8,11 +8,12 @@ use AmoCRM\Exceptions\AmoCRMMissedTokenException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use AmoCRM\Helpers\EntityTypesInterface;
 use App\Services\AmoCRM\Double\ContactDoubleHandler;
-use App\Services\AmoCRM\Webhook\GetModelIdByWebhook;
+use App\Services\AmoCRM\Webhook\GetModelIdsByWebhook;
 use App\Services\AmoCRM\Webhook\GetModelTypeByWebhook;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use function Psy\debug;
 
 class AmoAntiDouble extends Controller
 {
@@ -26,9 +27,9 @@ class AmoAntiDouble extends Controller
         # TODO List
         # Получить тип вебхука (создание сделки, удаление неразобранного, создание контакта)
         $modelType = GetModelTypeByWebhook::run($request);
-        $ids = GetModelIdByWebhook::run($request,$modelType);
-        # Передать id сущности для обработки в специализированный для сущности сервис
+        $ids = GetModelIdsByWebhook::run($request,$modelType);
 
+        # Передать id сущности для обработки в специализированный для сущности сервис
         if ($modelType === EntityTypesInterface::LEADS){
 
             # сервис обработки дублей для сделок
@@ -36,7 +37,7 @@ class AmoAntiDouble extends Controller
 //                #$result = LeadDoubleHandler::run($leadId);
 //            }
 
-        } elseif ($modelType === EntityTypesInterface::CONTACTS){
+        } elseif ($modelType === EntityTypesInterface::CONTACT){
             # сервис обработки дублей контактов
             foreach ($ids as $contactId){
                 $result = ContactDoubleHandler::run($contactId);
