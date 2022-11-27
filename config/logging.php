@@ -13,6 +13,7 @@ return [
     'dir_getcourse_user_events' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/user_events.log',
     'dir_error' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/error.log',
     'dir_amo_analytics' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/amo_analytics.log',
+    'dir_sb_analytics' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/sb_analytics.log',
     'dir_event' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/event.log',
     'dir_event_lesson' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/event_lesson.log',
     'dir_amo_helper_add_tags' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/amo_helper_add_tags.log',
