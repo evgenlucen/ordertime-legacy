@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AmoCRM\AmoAntiDouble;
 use App\Http\Controllers\AmoCRM\AmoAuthController;
 use App\Http\Controllers\AmoCRM\AmoSetPipelinesDataToDbController;
 use App\Http\Controllers\AmoCRM\AnalyticsController;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('amocrm')->group(function(){
     Route::post('analytics',[AnalyticsController::class,'run']);
+    Route::post('antidouble',[AmoAntiDouble::class,'run']);
     Route::post('analytics/test',[AnalyticsControllerTest::class,'run']);
     Route::get('info',[AmoInfo::class, 'run']);
     Route::get('auth',[AmoAuthController::class, 'run']);
