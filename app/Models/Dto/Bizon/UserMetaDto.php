@@ -63,6 +63,8 @@ class UserMetaDto
     private ?bool $is_view_content_part = false;
     private ?bool $is_view_sales_part = false;
     private ?bool $is_visit_webinar = false;
+    /** рассчитываемая активность от 1 до 4 */
+    private ?int $web_activity;
 
 
     public static function fromArray($user_meta){
@@ -563,6 +565,22 @@ class UserMetaDto
     public function setDurationInWebinar(?int $duration_in_webinar): void
     {
         $this->duration_in_webinar = $duration_in_webinar;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getWebActivity(): ?int
+    {
+        return $this->web_activity;
+    }
+
+    /**
+     * @param int|null $web_activity
+     */
+    public function setWebActivity(?int $web_activity): void
+    {
+        $this->web_activity = $web_activity;
     }
 
 

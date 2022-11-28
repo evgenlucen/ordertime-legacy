@@ -31,6 +31,37 @@ class eventsConfig
         return 'visit_webinar';
     }
 
+    public static function getActionParamsDtoByWebActivity(int $webActivityLevel): ?ActionParamsDto
+    {
+        $actionModel = new ActionParamsDto();
+        $actionModel->setName('visit_webinar');
+
+        switch ($webActivityLevel){
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                $amoAction = new AmoActionDto();
+                $amoAction->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amoAction->setStatusId(amocrmConfig::STATUS_OPENING_WEB);
+                $amoAction->setTags(['web_activity_'.$webActivityLevel]);
+                $actionModel->setAmocrmAction($amoAction);
+
+                $salebotAction = new SalebotActionDto();
+                $salebotAction->message = 'web_activity_' . $webActivityLevel;
+                $salebotAction->vars = ['web_activity' => $webActivityLevel];
+
+                $actionModel->setSalebotAction($salebotAction);
+                break;
+
+        }
+
+        return $actionModel;
+
+
+    }
+
     public static function getActionParamsDtoByEventName(string $event_name): ?ActionParamsDto
     {
         $action_model = new ActionParamsDto();

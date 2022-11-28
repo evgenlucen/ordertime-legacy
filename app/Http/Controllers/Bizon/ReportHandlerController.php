@@ -112,34 +112,49 @@ class ReportHandlerController extends Controller
             /** Длительность пребывания на вебе в минутах */
             $user_model->setDurationInWebinar((string)round(($view_end_ux - $view_start_ux) / 60, 1));
 
+            $user_duration_in_percent = $user_model->getDurationInWebinar() / $webinar_report_dto->getLen() * 100;
+
+            # set level activity
+            if($user_duration_in_percent <= 25) {
+                $user_model->setWebActivity(1);
+            } elseif ($user_duration_in_percent <= 50) {
+                $user_model->setWebActivity(2);
+            } elseif ($user_duration_in_percent <= 75) {
+                $user_model->setWebActivity(3);
+            } elseif ($user_duration_in_percent <= 100) {
+                $user_model->setWebActivity(4);
+            } else {
+                $user_model->setWebActivity(0);
+            }
+
             /** Получить событие по параметрам просмотра */
             # был ли на вебинаре минимальное кол-во времени
-            if ($user_model->getDurationInWebinar() >= $config_by_room->getVisitWebinarDurationMin()) {
-                $user_model->setIsVisitWebinar(TRUE);
-
-                # Смотрел ли контентную
-                if ($user_model->getDurationInWebinar() >= $config_by_room->getContentPartDurationMin()) {
-                    $user_model->setIsViewContentPart(TRUE);
-                }
-                # Смотрел ли продающую часть
-
-                $diff = ($view_end_ux - $webinar_report_dto->getSalesPartTimestamp()) / 60 - $config_by_room->getSalesPartDurationMin();
-                if (!empty($diff) && $diff > 0) {
-                    $user_model->setIsViewSalesPart(TRUE);
-                }
-
-            }
+//            if ($user_model->getDurationInWebinar() >= $config_by_room->getVisitWebinarDurationMin()) {
+//                $user_model->setIsVisitWebinar(TRUE);
+//
+//                # Смотрел ли контентную
+//                if ($user_model->getDurationInWebinar() >= $config_by_room->getContentPartDurationMin()) {
+//                    $user_model->setIsViewContentPart(TRUE);
+//                }
+//                # Смотрел ли продающую часть
+//
+//                $diff = ($view_end_ux - $webinar_report_dto->getSalesPartTimestamp()) / 60 - $config_by_room->getSalesPartDurationMin();
+//                if (!empty($diff) && $diff > 0) {
+//                    $user_model->setIsViewSalesPart(TRUE);
+//                }
+//
+//            }
 
 
             # Получить имя события по user_model
-            $event_name = eventsConfig::getEventNameByUserMetaDto($user_model);
+//            $event_name = eventsConfig::getEventNameByUserMetaDto($user_model);
+//
+//            if (empty($event_name)) {
+//                return new JsonResponse(['success' =>false, 'error' => 'Event name not found' ]);
+//            }
 
-            if (empty($event_name)) {
-                return new JsonResponse(['success' =>false, 'error' => 'Event name not found' ]);
-            }
-
-            # Получить параметры действия по событию
-            $action_params = eventsConfig::getActionParamsDtoByEventName($event_name);
+            # Получить параметры действия по уровню активности
+            $action_params = eventsConfig::getActionParamsDtoByWebActivity($user_model->getWebActivity());
 
             /** добавить в модель лида теги */
             if (!empty($action_params->getAmocrmAction())) {
@@ -185,7 +200,7 @@ class ReportHandlerController extends Controller
                 'diff (view_end - SalesPartTimestamp) / 60 - SalesPartDurationMin' => $diff ?? 'none',
                 'view_start_ux' => $view_start_ux,
                 'view_end_ux' => $view_end_ux,
-                'event_name' => $event_name,
+                'web_activity' => $user_model->getWebActivity(),
                 'action_params' => $action_params,
                 'priority_status_lead' => $priority_status_lead ?? 'null',
                 'priority_status_user' => $priority_status_user_model ?? 'null',
@@ -208,10 +223,6 @@ class ReportHandlerController extends Controller
 
         return new JsonResponse(['success' => true, 'data' => []]);
 
-        //$data_log['leads_collection'] = $leads_colleciton->toArray();
-        //$data_log['notes_collection'] = $notes_collection->toArray();
-        # Debuger::debug($data_log);
-        #die();
 
     }
 
