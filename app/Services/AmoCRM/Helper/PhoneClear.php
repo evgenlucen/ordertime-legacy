@@ -30,4 +30,15 @@ class PhoneClear
         return preg_replace("/[^0-9]/", "", $phone);
     }
 
+    public static function withOutCountryCode(string $phone): string
+    {
+        $clearPhone = self::run($phone);
+        $firstSymbol = substr($clearPhone,0,1);
+        if ( $firstSymbol== 7 || $firstSymbol == 8 ){
+            return substr($clearPhone,1);
+        } else {
+            return $clearPhone;
+        }
+    }
+
 }

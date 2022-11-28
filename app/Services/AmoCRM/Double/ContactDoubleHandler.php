@@ -16,6 +16,7 @@ use App\Services\AmoCRM\Helper\GetUniqModelIdsByCollection;
 use App\Services\AmoCRM\Helper\MergeCollections;
 use App\Services\AmoCRM\Helper\PhoneClear;
 use App\Services\AmoCRM\Task\CreateDoubleTask;
+use Exception;
 
 class ContactDoubleHandler
 {
@@ -23,7 +24,7 @@ class ContactDoubleHandler
      * @throws AmoCRMApiException
      * @throws AmoCRMoAuthApiException
      * @throws AmoCRMMissedTokenException
-     * @throws \Exception
+     * @throws Exception
      */
     public static function run(int $contactId)
     {
@@ -73,7 +74,7 @@ class ContactDoubleHandler
             if (!empty($isFindByPhone)) {
                 $result['task_by_phone'] = CreateDoubleTask::contact(
                     $amoApiClient,
-                    PhoneClear::run($phone),
+                    PhoneClear::withOutCountryCode($phone),
                     $contactModel->getId(),
                     amocrmConfig::TASK_TYPE_DOUBLE_CONTACT
                 )->getId();

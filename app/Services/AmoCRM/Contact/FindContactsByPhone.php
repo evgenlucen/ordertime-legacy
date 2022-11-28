@@ -14,7 +14,7 @@ class FindContactsByPhone
 
     public static function run(AmoCRMApiClient $apiClient, string $phone): ?ContactsCollection
     {
-        $phone = PhoneClear::run($phone);
+        $phone = PhoneClear::withOutCountryCode($phone);
 
         $contacts = FindContactsByQuery::run($apiClient,$phone);
 
@@ -28,7 +28,7 @@ class FindContactsByPhone
             $contact = $contacts->offsetGet($i);
             $contactPhone = GetValueCustomFieldByCfId::run($contact->getCustomFieldsValues(),amocrmConfig::PHONE_CF_ID);
             if (null === $contactPhone) { continue; }
-            $contactPhone =  PhoneClear::run($contactPhone);
+            $contactPhone =  PhoneClear::withOutCountryCode($contactPhone);
 
             if ($phone == $contactPhone) {
                 $result = $result->add($contact);
