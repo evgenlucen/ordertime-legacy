@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Analytics;
 use App\Configs\googleAnalyticsConfig;
 use App\Http\Controllers\Controller;
 use App\Services\Analytics\GoogleAnalytics\Tasks\CreateGeneratedGaCid;
+use App\Services\Logger\Logger;
 use Br33f\Ga4\MeasurementProtocol\Dto\Common\UserProperties;
 use Br33f\Ga4\MeasurementProtocol\Dto\Common\UserProperty;
 use Br33f\Ga4\MeasurementProtocol\Dto\Event\BaseEvent;
@@ -66,6 +67,19 @@ class GA4Controller extends Controller
 
         $sendService = new Service(googleAnalyticsConfig::getApiKey(), googleAnalyticsConfig::getStreamId());
         $result_send_response = $sendService->send($request_to_ga);
+
+        Logger::writeToLog(
+            [
+                'request' => $request->all(),
+                'send_result' => [
+                        'code' => $result_send_response->getStatusCode(),
+                        'body' => $result_send_response->getBody(),
+                        'data' => $result_send_response->getData(),
+                    ],
+                'request_to_ga' => $request_to_ga
+            ],
+            config('logging.dir_sb_analytics')
+        );
 
         return new JsonResponse(
             [

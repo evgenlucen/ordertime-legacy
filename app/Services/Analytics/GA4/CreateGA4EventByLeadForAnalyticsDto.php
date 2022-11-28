@@ -33,12 +33,12 @@ class CreateGA4EventByLeadForAnalyticsDto
 
         $baseRequest = new BaseRequest($leadForAnalyticsDto->getGoogleClientId(),$eventsCollection);
 
-        $userPropertiesCollection = new UserProperties();
-        $userPropertiesCollection->addUserProperty(
-            new UserProperty(self::USER_CURRENT_CRM_STATUS, $leadForAnalyticsDto->getStatusName())
-        );
+//        $userPropertiesCollection = new UserProperties();
+//        $userPropertiesCollection->addUserProperty(
+//            new UserProperty(self::USER_CURRENT_CRM_STATUS, $leadForAnalyticsDto->getStatusName())
+//        );
 
-        $baseRequest->setUserProperties($userPropertiesCollection);
+//        $baseRequest->setUserProperties($userPropertiesCollection);
 
         return $baseRequest;
     }
