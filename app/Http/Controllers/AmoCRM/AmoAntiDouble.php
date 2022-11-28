@@ -48,7 +48,7 @@ class AmoAntiDouble extends Controller
 //                #$result = CompanyDoubleHandler::run($companyId);
 //            }
         } else {
-            $result = 'not supported model type';
+            throw new \Exception("Not supported model type" . (string)$modelType);
         }
         # вернуть ответ
         return new JsonResponse([

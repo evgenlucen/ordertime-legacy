@@ -74,7 +74,7 @@ class ContactDoubleHandler
                 $result['task_by_phone'] = CreateDoubleTask::contact(
                     $amoApiClient,
                     PhoneClear::run($phone),
-                    array_shift($uniqContactIds),
+                    $contactModel->getId(),
                     amocrmConfig::TASK_TYPE_DOUBLE_CONTACT
                 )->getId();
             }
@@ -82,7 +82,7 @@ class ContactDoubleHandler
                 $result['task_by_email'] = CreateDoubleTask::contact(
                     $amoApiClient,
                     trim($email),
-                    array_shift($uniqContactIds),
+                    $contactModel->getId(),
                     amocrmConfig::TASK_TYPE_DOUBLE_CONTACT
                 )->getId();
             }
