@@ -29,8 +29,9 @@ class bizonConfig {
 
         switch ($webinar_name) {
             case '138703:la9tu69l2r':
+            case '138703:online15':
+            case '138703:online19':
                 $webinar_config->setWebinarName($webinar_name);
-                $webinar_config->setVisitWebinarDurationMin();
                 break;
         }
 
