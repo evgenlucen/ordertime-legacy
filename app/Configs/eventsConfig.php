@@ -172,36 +172,45 @@ class eventsConfig
                 $salebot_action->message = 'deal_create';
                 $action_model->setSalebotAction($salebot_action);
                 break;
-            case 'Новый':
-            case 'В работе':
-            case 'Ожидаем оплаты':
+            case 'deal_create_telegram':
                 $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
-                $amo_action->setStatusId(amocrmConfig::LEGACY_STATUS_BUILD_SENT);
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setStatusId(amocrmConfig::STATUS_CREATED_ORDER);
                 $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
+                $salebot_action = new SalebotActionDto();
+                $salebot_action->message = 'deal_create';
+                $action_model->setSalebotAction($salebot_action);
                 break;
             case 'partial_payment_success':
-            case 'Частично оплачен':
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
                 $amo_action->setStatusId(amocrmConfig::LEGACY_STATUS_PARTIAL_PAYMENT_SUCCESS);
                 $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
                 break;
+            case 'partial_payment_success_telegram':
+                $amo_action = new AmoActionDto();
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setStatusId(amocrmConfig::STATUS_PARTIAL_PAYMENT_SUCCESS);
+                $amo_action->setTags(['GC']);
+                $action_model->setAmocrmAction($amo_action);
+                break;
             case 'payment_success':
-            case 'Завершен':
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
                 $amo_action->setStatusId(amocrmConfig::STATUS_PAID_SUCCESS);
                 $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
                 break;
+            case 'payment_success_telegram':
+                $amo_action = new AmoActionDto();
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setStatusId(amocrmConfig::STATUS_PAID_SUCCESS);
+                $amo_action->setTags(['GC']);
+                $action_model->setAmocrmAction($amo_action);
+                break;
             case 'bounce':
-            case 'Не подтвержден':
-            case 'Отменен':
-            case 'Ложный':
-            case 'Отложен':
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_PAID);
                 $amo_action->setStatusId(amocrmConfig::STATUS_BOUNCE);

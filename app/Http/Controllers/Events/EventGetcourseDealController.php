@@ -34,11 +34,8 @@ class EventGetcourseDealController extends Controller
         $deal = DealDto::fromRequest($request);
         $user = $deal->getUser();
 
-        if($request->event_name == "change_status_deal") {
-            $action_param = eventsConfig::getActionParamsDtoByEventName($request->status_deal);
-        } else {
-            $action_param = eventsConfig::getActionParamsDtoByEventName($request->event_name);
-        }
+        $action_param = eventsConfig::getActionParamsDtoByEventName($request->event_name);
+
 
         # ищем по deal_id
         $leads_collection = FindLeadsByCustomFieldValue::run($api_client,amocrmConfig::CF_GC_DEAL_ID,$deal->getId());
