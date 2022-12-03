@@ -216,12 +216,14 @@ class ReportHandlerController extends Controller
 //            }
         }
 
-        $api_client->leads()->update($leads_colleciton);
-        $api_client->notes(EntityTypesInterface::LEADS)->add($notes_collection);
+        if(!$leads_colleciton->isEmpty()){
+            $api_client->leads()->update($leads_colleciton);
+            $api_client->notes(EntityTypesInterface::LEADS)->add($notes_collection);
+        }
 
         Logger::writeToLog($data_log, config('logging.dir_bizon_reports'));
 
-        return new JsonResponse(['success' => true, 'data' => []]);
+        return new JsonResponse(['success' => true, 'data' => $data_log]);
 
 
     }
