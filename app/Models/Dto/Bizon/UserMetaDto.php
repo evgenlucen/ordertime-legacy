@@ -67,7 +67,8 @@ class UserMetaDto
     private ?int $web_activity;
 
 
-    public static function fromArray($user_meta){
+    public static function fromArray($user_meta): UserMetaDto
+    {
         $user_model = new self();
 
         if(!empty($user_meta['_id'])) { $user_model->setId($user_meta['_id']); }

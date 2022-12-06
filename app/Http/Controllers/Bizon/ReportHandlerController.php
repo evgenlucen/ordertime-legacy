@@ -116,8 +116,6 @@ class ReportHandlerController extends Controller
 
             $user_duration_in_percent = $user_model->getDurationInWebinar() / $webinar_report_dto->getLen() * 100;
 
-
-
             # set level activity
             if($user_duration_in_percent <= 25) {
                 $user_model->setWebActivity(1);
@@ -125,7 +123,7 @@ class ReportHandlerController extends Controller
                 $user_model->setWebActivity(2);
             } elseif ($user_duration_in_percent <= 75) {
                 $user_model->setWebActivity(3);
-            } elseif ($user_duration_in_percent <= 100) {
+            } elseif ($user_duration_in_percent > 75) {
                 $user_model->setWebActivity(4);
             } else {
                 $user_model->setWebActivity(0);
@@ -201,11 +199,11 @@ class ReportHandlerController extends Controller
             $data_log['users_data'][] = [
                 'user_model' => $user_model,
                 'user_duration' => $user_model->getDurationInWebinar(),
-                'diff (view_end - SalesPartTimestamp) / 60 - SalesPartDurationMin' => $diff ?? 'none',
+                'user_duration_in_percent' => $user_duration_in_percent,
+                'web_activity' => $user_model->getWebActivity(),
                 'view_start_ux' => $view_start_ux,
                 'view_end_ux' => $view_end_ux,
-                'web_activity' => $user_model->getWebActivity(),
-                'action_params' => $action_params,
+                'action_params' => $action_params->toArray(),
                 'priority_status_lead' => $priority_status_lead ?? 'null',
                 'priority_status_user' => $priority_status_user_model ?? 'null',
                 'salebot_callback' => $salebot_callback_res,
