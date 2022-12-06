@@ -25,7 +25,7 @@ use App\Services\Bizon\Report\Tasks\GetPriorityStatusByAmoActionDto;
 use App\Services\Bizon\Report\Tasks\GetRealUnixByBizonTime;
 use App\Services\Debug\Debuger;
 use App\Services\Logger\Logger;
-use App\Services\Salebot\Actions\SalebotSendCallbackBySalebotByUserModel;
+use App\Services\Salebot\Actions\SalebotSendCallback;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use slavkluev\Bizon365\Client;
@@ -50,6 +50,8 @@ class ReportHandlerController extends Controller
     {
         $bizon_client = new Client(bizonConfig::getApiKey());
         $webinar_api = $bizon_client->getWebinarApi();
+
+        $data_log['request'] = $request->all();
 
         # Получить отчет из бизона
         $report_data = $webinar_api->getWebinar($request->webinarId)['report'] ?? null; //['report'];
@@ -113,6 +115,8 @@ class ReportHandlerController extends Controller
             $user_model->setDurationInWebinar((string)round(($view_end_ux - $view_start_ux) / 60, 1));
 
             $user_duration_in_percent = $user_model->getDurationInWebinar() / $webinar_report_dto->getLen() * 100;
+
+
 
             # set level activity
             if($user_duration_in_percent <= 25) {
@@ -188,7 +192,7 @@ class ReportHandlerController extends Controller
             $notes_collection->add($note_model);
 
             /** Отправить в salebot со статусом посещения вебинара */
-            $salebot_callback_res = SalebotSendCallbackBySalebotByUserModel::run($user_model);
+            $salebot_callback_res = SalebotSendCallback::run($user_model,$action_params->getSalebotAction());
             $data_log['salebot_message'][] = $salebot_callback_res;
 
             /** Sleep ибо нет очередей */
