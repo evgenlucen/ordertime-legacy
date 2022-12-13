@@ -190,7 +190,7 @@ class ReportHandlerController extends Controller
             $notes_collection->add($note_model);
 
             /** Отправить в salebot со статусом посещения вебинара */
-            $salebot_callback_res = SalebotSendCallback::run($user_model,$action_params->getSalebotAction());
+            $salebot_callback_res = SalebotSendCallback::byUserAndAction($user_model,$action_params->getSalebotAction());
             $data_log['salebot_message'][] = $salebot_callback_res;
 
             /** Sleep ибо нет очередей */

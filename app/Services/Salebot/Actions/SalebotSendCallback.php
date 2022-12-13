@@ -16,7 +16,7 @@ class SalebotSendCallback
      * @param UserMetaDto $user
      * @return \Exception|\GuzzleHttp\Exception\GuzzleException|string
      */
-    public static function run(UserMetaDto $user, SalebotActionDto $salebotActionDto)
+    public static function byUserAndAction(UserMetaDto $user, SalebotActionDto $salebotActionDto)
     {
         $salebot_client = new Salebot(salebotConfig::getApiKey());
         if(empty($user->getP1())){
@@ -27,6 +27,12 @@ class SalebotSendCallback
         }
         return $salebot_client->callback($user->getP1(),$salebotActionDto->message,$salebotActionDto->vars);
 
+    }
+
+    public static function run(int $salebot_id, SalebotActionDto $salebotActionDto)
+    {
+        $salebot_client = new Salebot(salebotConfig::getApiKey());
+        return $salebot_client->callback($salebot_id,$salebotActionDto->message,$salebotActionDto->vars);
     }
 
 }
