@@ -35,6 +35,8 @@ class EventGetcourseDealController extends Controller
         $user = $deal->getUser();
 
         $action_param = eventsConfig::getActionParamsDtoByEventName($request->event_name);
+        $action_param = eventsConfig::getActionParamByDeal($deal);
+
 
 
         # ищем по deal_id
