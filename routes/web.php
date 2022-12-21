@@ -8,6 +8,7 @@ use App\Http\Controllers\AmoCRM\AnalyticsControllerTest;
 use App\Http\Controllers\AmoCRM\Helpers\AddTagsController;
 use App\Http\Controllers\AmoCRM\Helpers\AddTaskController;
 use App\Http\Controllers\AmoCRM\Helpers\ChangeLeadStatus;
+use App\Http\Controllers\AmoCRM\Helpers\ChangeResponsibleUserController;
 use App\Http\Controllers\AmoCRM\Info\AmoInfo;
 use App\Http\Controllers\Events\EventGetcourseDealController;
 use App\Http\Controllers\Events\EventGetcourseUserController;
@@ -29,6 +30,7 @@ Route::prefix('amocrm')->group(function(){
     Route::get('statuses',[AmoSetPipelinesDataToDbController::class,'index']);
     Route::prefix('helper')->group(function(){
         Route::post('add-tags',[AddTagsController::class,'run']);
+        Route::post('change-responsible',[ChangeResponsibleUserController::class,'run']);
         Route::post('change-lead-status',[ChangeLeadStatus::class,'run']);
         Route::post('add-task',[AddTaskController::class,'run']);
     });
