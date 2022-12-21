@@ -43,10 +43,10 @@ class ChangeResponsibleUserController extends Controller
 
 
         $amoApiClient = GetApiClient::getApiClient();
-        $resultLeadUpdate = $amoApiClient->contacts()->updateOne($contact);
+        $resultLeadUpdate = $amoApiClient->leads()->updateOne($lead);
 
         if (isset($contact)) {
-            $resultContactUpdate = $amoApiClient->leads()->updateOne($lead);
+            $resultContactUpdate = $amoApiClient->contacts()->updateOne($contact);
             $dataLog[] = ['contactUpdate' => $resultContactUpdate->getId()];
         }
 
