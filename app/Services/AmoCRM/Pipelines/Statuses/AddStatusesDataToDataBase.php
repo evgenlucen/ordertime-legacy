@@ -32,7 +32,7 @@ class AddStatusesDataToDataBase
             $pipeline_model->name = $pipeline->getName();
             $pipeline_model->is_main = $pipeline->getIsMain();
 
-            $pipeline_model->update();
+            $pipeline_model->updateOrCreate(['id' => $pipeline->getId()],$pipeline_model->toArray());
 
             $statuses = $pipeline->getStatuses();
 

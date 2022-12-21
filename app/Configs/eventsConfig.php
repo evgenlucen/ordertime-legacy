@@ -6,6 +6,7 @@ use App\Models\Dto\Action\ActionParamsDto;
 use App\Models\Dto\Action\AmoActionDto;
 use App\Models\Dto\Action\SalebotActionDto;
 use App\Models\Dto\Bizon\UserMetaDto;
+use App\Models\Dto\GetCourse\DealDto;
 
 class eventsConfig
 {
@@ -43,7 +44,7 @@ class eventsConfig
             case 3:
             case 4:
                 $amoAction = new AmoActionDto();
-                $amoAction->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amoAction->setPipelineId(amocrmConfig::PIPELINE_TG_COURSE);
                 $amoAction->setStatusId(amocrmConfig::STATUS_OPENING_WEB);
                 $amoAction->setTags(['web_activity_'.$webActivityLevel]);
                 $actionModel->setAmocrmAction($amoAction);
@@ -71,7 +72,7 @@ class eventsConfig
 
             case 'view_lesson_1':
                  $amo_action = new AmoActionDto();
-                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_TG_COURSE);
                  $amo_action->setStatusId(amocrmConfig::STATUS_OPEN_1_LESSON);
                  $amo_action->setTags(['Открыл 1 урок']);
                  $action_model->setAmocrmAction($amo_action);
@@ -89,7 +90,7 @@ class eventsConfig
                  break;
             case 'view_lesson_2':
                 $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_TG_COURSE);
                 $amo_action->setStatusId(amocrmConfig::STATUS_OPEN_2_LESSON);
                 $amo_action->setTags(['Открыл 2 урок']);
                 $action_model->setAmocrmAction($amo_action);
@@ -107,7 +108,7 @@ class eventsConfig
                 break;
             case 'view_lesson_3':
                 $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_TG_COURSE);
                 $amo_action->setStatusId(amocrmConfig::STATUS_OPEN_3_LESSON);
                 $amo_action->setTags(['Открыл 3 урок']);
                 $action_model->setAmocrmAction($amo_action);
@@ -125,7 +126,7 @@ class eventsConfig
                 break;
             case 'view_lesson_webinar_rec':
                 $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_TG_COURSE);
                 $amo_action->setStatusId(amocrmConfig::STATUS_OPENING_WEB);
                 $amo_action->setTags(['Смотрел запись веба']);
                 $amo_action->setServiceMessage('Просмотрена запись вебинара');
@@ -145,7 +146,7 @@ class eventsConfig
                 break;
             case 'view_content_part':
                 $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_TG_COURSE);
                 $amo_action->setStatusId(amocrmConfig::STATUS_OPENING_WEB);
                 $action_model->setAmocrmAction($amo_action);
                 break;
@@ -174,7 +175,7 @@ class eventsConfig
                 break;
             case 'deal_create_telegram':
                 $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_TG_COURSE);
                 $amo_action->setStatusId(amocrmConfig::STATUS_CREATED_ORDER);
                 $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
@@ -191,7 +192,7 @@ class eventsConfig
                 break;
             case 'partial_payment_success_telegram':
                 $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_TG_COURSE);
                 $amo_action->setStatusId(amocrmConfig::STATUS_PARTIAL_PAYMENT_SUCCESS);
                 $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
@@ -205,7 +206,7 @@ class eventsConfig
                 break;
             case 'payment_success_telegram':
                 $amo_action = new AmoActionDto();
-                $amo_action->setPipelineId(amocrmConfig::PIPELINE_WORKED);
+                $amo_action->setPipelineId(amocrmConfig::PIPELINE_TG_COURSE);
                 $amo_action->setStatusId(amocrmConfig::STATUS_PAID_SUCCESS);
                 $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
@@ -224,4 +225,69 @@ class eventsConfig
 
         return $action_model;
     }
+
+    public static function getActionParamByDeal(DealDto $deal, $eventName)
+    {
+        # получить воронку по позиции
+        $pipelineId = self::getPipelineIdByPosition($deal->getPositions());
+        # получить статус сделки по статусу заказа
+        $statusId = self::getStatusIdByDealStatus($deal->getStatus(),$pipelineId,$eventName);
+
+        $action_model = new ActionParamsDto();
+        $action_model->setName($eventName);
+        $amo_action = new AmoActionDto();
+        $amo_action->setPipelineId($pipelineId);
+        $amo_action->setStatusId($statusId);
+        $amo_action->setTags(['GC']);
+        $action_model->setAmocrmAction($amo_action);
+
+        $salebot_action = new SalebotActionDto();
+        $salebot_action->message = $eventName;
+        $salebot_action->vars = [
+            'gc_deal_id' => $deal->getId(),
+            'gc_deal_positions' => $deal->getPositions(),
+            'gc_cost_money' => $deal->getCostMoney(),
+            'gc_payment_link' => $deal->getPaymentLink()
+        ];
+        $action_model->setSalebotAction($salebot_action);
+
+        return $action_model;
+
+    }
+
+    private static function getPipelineIdByPosition(?string $positions): int
+    {
+        switch ($positions){
+            case 'Гайд по финансовому плану':
+            case 'Гайд по выплатам и льготам':
+                $pipelineId = amocrmConfig::PIPELINE_FINPLAN;
+                break;
+            case 'Разработчик чат-ботов':
+                $pipelineId = amocrmConfig::PIPELINE_TG_COURSE;
+                break;
+            default:
+                $pipelineId = amocrmConfig::PIPELINE_PAID;
+        }
+
+        return $pipelineId;
+    }
+
+    private static function getStatusIdByDealStatus(string $statusDeal,int $pipelineId, string $eventName): int
+    {
+        if($pipelineId == amocrmConfig::PIPELINE_FINPLAN){
+
+            if ($statusDeal == 'Новый' || $statusDeal == 'В Работе') {
+                $statusId = amocrmConfig::STATUS_TIPWARE_DEAL_CREATE;
+            } elseif($statusDeal == "Завершен" && $eventName == strpos($eventName,'payment_success')){
+
+            }
+            else {
+                $statusId = amocrmConfig::STATUS_CREATED_ORDER;
+            }
+
+            return $statusId;
+        }
+
+    }
+
 }

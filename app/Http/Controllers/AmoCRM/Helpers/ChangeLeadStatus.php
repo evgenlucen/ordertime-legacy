@@ -8,6 +8,7 @@ use App\Models\Dto\Action\ActionParamsDto;
 use App\Models\Dto\Action\AmoActionDto;
 use App\Services\AmoCRM\ApiClient\GetApiClient;
 use App\Services\AmoCRM\Lead\GetLeadById;
+use App\Services\AmoCRM\Pipelines\Statuses\AddStatusesDataToDataBase;
 use App\Services\AmoCRM\Pipelines\Statuses\GetPriorityStatusByLeadModel;
 use App\Services\Bizon\Report\Tasks\GetPriorityStatusByAmoActionDto;
 use App\Services\Logger\Logger;
@@ -51,7 +52,11 @@ class ChangeLeadStatus extends Controller
 
         $priority_status_request = GetPriorityStatusByAmoActionDto::run($amo_action);
         if(null === $priority_status_request) {
-            return new JsonResponse(['success' => false, 'error' => 'status_id not found in our database']);
+            $update_statuses_result = AddStatusesDataToDataBase::run($api_client);
+            $priority_status_request = GetPriorityStatusByAmoActionDto::run($amo_action);
+            if(null === $priority_status_request) {
+                return new JsonResponse(['success' => false, 'error' => 'status_id not found in our database']);
+            }
         }
         $data_log['priority_statuses'][] = ['lead' => $priority_status_lead, 'user' => $priority_status_request];
 

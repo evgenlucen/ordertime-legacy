@@ -67,7 +67,8 @@ class UserMetaDto
     private ?int $web_activity;
 
 
-    public static function fromArray($user_meta){
+    public static function fromArray($user_meta): UserMetaDto
+    {
         $user_model = new self();
 
         if(!empty($user_meta['_id'])) { $user_model->setId($user_meta['_id']); }
@@ -96,7 +97,7 @@ class UserMetaDto
         /** добавляем мс до часового пояса приложения */
         if(!empty($user_meta['view'])) { $user_model->setView($user_meta['view'] + bizonConfig::UTC * 3600000); }
         if(!empty($user_meta['viewTill'])) { $user_model->setViewTill($user_meta['viewTill']  + bizonConfig::UTC * 3600000); }
-        $user_model->setMessagesNum($user_meta['messages_num']);
+        if(!empty($user_meta['messages_num'])) { $user_model->setMessagesNum($user_meta['messages_num']); }
         if(!empty($user_meta['messages_data'])) { $user_model->setMessagesData($user_meta['messages_data']); }
 
         return $user_model;

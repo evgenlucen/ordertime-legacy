@@ -44,8 +44,11 @@ class amocrmConfig
 
     /* PIPELINES */
     public const PIPELINES_ID_FOR_UA = [6069535];
-    public const PIPELINE_WORKED = 6069535;
+    public const PIPELINE_TG_COURSE = 6069535;
     public const PIPELINE_PAID = 5174095; //не связана с автоворонкой
+
+    const PIPELINE_FINPLAN = 5200918;
+
 
     /* STATUSES */
     /* Отдел доходимости */
@@ -54,34 +57,37 @@ class amocrmConfig
     public const STATUS_OPEN_2_LESSON = 52650079;
     public const STATUS_OPEN_3_LESSON = 52650082;
     public const STATUS_REGISTRATION_TO_WEBINAR = 52648174;
+
     public const STATUS_OPENING_WEB = 52650085;
 
+
     public const STATUS_BOUNCE = 143;
-
-
     /* Legacy pipeline */
     public const LEGACY_STATUS_BUILD_SENT = 46331179;
+
+
     public const LEGACY_STATUS_PARTIAL_PAYMENT_SUCCESS = 46331182;
-
-
     /* Отдел продаж */
     public const STATUS_ALL_LEADS = 52650088;
     public const STATUS_BUILD = 52650094;
     public const STATUS_CREATED_ORDER = 52648177;
     public const STATUS_PARTIAL_PAYMENT_SUCCESS = 52650097;
+
+    /* Фин.грамонтность */
+    public const STATUS_PAID_TRIPWARE = 46579162;
+
+
     public const STATUS_PAID_SUCCESS = 142;
-
-
     # нерабочие статусы
     public const STATUSES_NON_WORKED = [142, 143];
     # рабочие воронки
-    public const PIPELINES_WORKED = [self::PIPELINE_WORKED,self::PIPELINE_PAID];
 
+    public const PIPELINES_WORKED = [self::PIPELINE_TG_COURSE,self::PIPELINE_PAID];
     /* USERS */
     public const USER_ROP = 7820154;
+
+
     public const RESPONSIBLE_USER_ID = 7820154;
-
-
     /** SERVICE MESSAGE */
     public const NAME_SERVICE_MESSAGE = "EngineTun";
     public const TASK_TYPE_DOUBLE_CONTACT = 2716338;

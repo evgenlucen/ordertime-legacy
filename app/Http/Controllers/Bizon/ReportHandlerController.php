@@ -25,7 +25,7 @@ use App\Services\Bizon\Report\Tasks\GetPriorityStatusByAmoActionDto;
 use App\Services\Bizon\Report\Tasks\GetRealUnixByBizonTime;
 use App\Services\Debug\Debuger;
 use App\Services\Logger\Logger;
-use App\Services\Salebot\Actions\SalebotSendCallbackBySalebotByUserModel;
+use App\Services\Salebot\Actions\SalebotSendCallback;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use slavkluev\Bizon365\Client;
@@ -50,6 +50,8 @@ class ReportHandlerController extends Controller
     {
         $bizon_client = new Client(bizonConfig::getApiKey());
         $webinar_api = $bizon_client->getWebinarApi();
+
+        $data_log['request'] = $request->all();
 
         # Получить отчет из бизона
         $report_data = $webinar_api->getWebinar($request->webinarId)['report'] ?? null; //['report'];
@@ -121,7 +123,7 @@ class ReportHandlerController extends Controller
                 $user_model->setWebActivity(2);
             } elseif ($user_duration_in_percent <= 75) {
                 $user_model->setWebActivity(3);
-            } elseif ($user_duration_in_percent <= 100) {
+            } elseif ($user_duration_in_percent > 75) {
                 $user_model->setWebActivity(4);
             } else {
                 $user_model->setWebActivity(0);
@@ -188,7 +190,7 @@ class ReportHandlerController extends Controller
             $notes_collection->add($note_model);
 
             /** Отправить в salebot со статусом посещения вебинара */
-            $salebot_callback_res = SalebotSendCallbackBySalebotByUserModel::run($user_model);
+            $salebot_callback_res = SalebotSendCallback::byUserAndAction($user_model,$action_params->getSalebotAction());
             $data_log['salebot_message'][] = $salebot_callback_res;
 
             /** Sleep ибо нет очередей */
@@ -197,11 +199,11 @@ class ReportHandlerController extends Controller
             $data_log['users_data'][] = [
                 'user_model' => $user_model,
                 'user_duration' => $user_model->getDurationInWebinar(),
-                'diff (view_end - SalesPartTimestamp) / 60 - SalesPartDurationMin' => $diff ?? 'none',
+                'user_duration_in_percent' => $user_duration_in_percent,
+                'web_activity' => $user_model->getWebActivity(),
                 'view_start_ux' => $view_start_ux,
                 'view_end_ux' => $view_end_ux,
-                'web_activity' => $user_model->getWebActivity(),
-                'action_params' => $action_params,
+                'action_params' => $action_params->toArray(),
                 'priority_status_lead' => $priority_status_lead ?? 'null',
                 'priority_status_user' => $priority_status_user_model ?? 'null',
                 'salebot_callback' => $salebot_callback_res,
@@ -216,12 +218,14 @@ class ReportHandlerController extends Controller
 //            }
         }
 
-        $api_client->leads()->update($leads_colleciton);
-        $api_client->notes(EntityTypesInterface::LEADS)->add($notes_collection);
+        if(!$leads_colleciton->isEmpty()){
+            $api_client->leads()->update($leads_colleciton);
+            $api_client->notes(EntityTypesInterface::LEADS)->add($notes_collection);
+        }
 
         Logger::writeToLog($data_log, config('logging.dir_bizon_reports'));
 
-        return new JsonResponse(['success' => true, 'data' => []]);
+        return new JsonResponse(['success' => true, 'data' => $data_log]);
 
 
     }
