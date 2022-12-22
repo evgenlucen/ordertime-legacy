@@ -53,6 +53,7 @@ class AddTaskController extends Controller
         $taskModel->setEntityType(EntityTypesInterface::LEADS);
         $taskModel->setCompleteTill((new DateTimeImmutable())->getTimestamp() + $execution_time_in_hour*60*60);
         $taskModel->setTaskTypeId($task_type);
+        $taskModel->setResponsibleUserId($lead->getResponsibleUserId());
 
         $result = $api_client->tasks()->addOne($taskModel);
 
