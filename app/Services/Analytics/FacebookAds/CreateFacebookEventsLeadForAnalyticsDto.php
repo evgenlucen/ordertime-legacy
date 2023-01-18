@@ -29,7 +29,7 @@ class CreateFacebookEventsLeadForAnalyticsDto
         $events = array();
         array_push($events, $event);
 
-        if($lead_dto->getStatusId() == amocrmConfig::STATUS_PAID_SUCCESS){
+        if($lead_dto->getStatusId() == amocrmConfig::STATUS_PAYMENT_SUCCESS){
             $transaction = CreateFacebookAdsEventTransactionByLeadForAnalyticsDto::run($lead_dto,$user_data);
             array_push($events, $transaction);
         }

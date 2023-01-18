@@ -45,6 +45,7 @@ class amocrmConfig
     /* PIPELINES */
     public const PIPELINES_ID_FOR_UA = [6069535];
     public const PIPELINE_TG_COURSE = 6069535;
+    public const PIPELINE_CHAT_BOTS = 6248422;
     public const PIPELINE_PAID = 5174095; //не связана с автоворонкой
 
     const PIPELINE_FINPLAN = 5200918;
@@ -71,13 +72,18 @@ class amocrmConfig
     public const STATUS_ALL_LEADS = 52650088;
     public const STATUS_BUILD = 52650094;
     public const STATUS_CREATED_ORDER = 52648177;
-    public const STATUS_PARTIAL_PAYMENT_SUCCESS = 52650097;
+    public const STATUS_PREPAYMENT_SUCCESS = 52650097;
 
     /* Фин.грамонтность */
     public const STATUS_PAID_TRIPWARE = 46579162;
 
 
-    public const STATUS_PAID_SUCCESS = 142;
+    /* CHAT BOTS */
+    public const STATUS_CREATED_ORDER_CB = 53823942;
+    public const STATUS_PREPAYMENT_SUCCESS_CB = 53823950;
+
+
+    public const STATUS_PAYMENT_SUCCESS = 142;
     # нерабочие статусы
     public const STATUSES_NON_WORKED = [142, 143];
     # рабочие воронки

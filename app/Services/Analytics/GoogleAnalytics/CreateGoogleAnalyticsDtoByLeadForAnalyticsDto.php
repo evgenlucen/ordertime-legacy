@@ -34,7 +34,7 @@ class CreateGoogleAnalyticsDtoByLeadForAnalyticsDto
         $analytics->setEventAction($lead_dto->getStatusName());
         $analytics->setEventValue($lead_dto->getRevenue());
 
-        if ($lead_dto->getStatusId() == amocrmConfig::STATUS_PAID_SUCCESS) {
+        if ($lead_dto->getStatusId() == amocrmConfig::STATUS_PAYMENT_SUCCESS) {
             $analytics = AddTransactionToAnalyticsDto::run($analytics,$lead_dto);
         }
 

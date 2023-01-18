@@ -114,6 +114,7 @@ class ReportHandlerController extends Controller
             /** Длительность пребывания на вебе в минутах */
             $user_model->setDurationInWebinar((string)round(($view_end_ux - $view_start_ux) / 60, 1));
 
+            /** Сколько процентов от вебинара пользователь посмотрел */
             $user_duration_in_percent = $user_model->getDurationInWebinar() / $webinar_report_dto->getLen() * 100;
 
             # set level activity
