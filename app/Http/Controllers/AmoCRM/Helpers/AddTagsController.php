@@ -24,14 +24,22 @@ class AddTagsController extends Controller
             return new JsonResponse(['success' => false, 'error' => 'Tags undefined']);
         }
 
+        if(empty($request->input('amo_lead_id'))){
+            return new JsonResponse(['success' => false, 'error' => 'amo_lead_id undefined']);
+        }
+
         $tags = explode(',',$request->input('tags'));
 
         $api_client = GetApiClient::getApiClient();
 
         # Получить сделку
-        $lead = FindLeadBySalebotEventRequest::run($api_client,$request);
+        try{
+            $lead = FindLeadBySalebotEventRequest::run($api_client,$request);
+        } catch (\Exception $exception){
+            return new JsonResponse(['success' => false, 'error' => $exception->getMessage()]);
+        }
         if(empty($lead)){
-            return new JsonResponse(['success' => false, 'error' => 'Lead undefined']);
+            return new JsonResponse(['success' => false, 'error' => "Lead with id: {$request->input('amo_lead_id')} undefined"]);
         }
 
         $lead = AddTagsToLeadByLeadModel::run($api_client,$lead,$tags);
