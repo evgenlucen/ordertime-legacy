@@ -101,14 +101,21 @@ class EventLessonController extends Controller
                 $lead = UpdateLeadModelByAmoActionDto::run($lead, $action_params->getAmocrmAction());
 
                 # update cf
-                $cf_country =  CreateTextCfModel::run(amocrmConfig::CF_ID_COUNTRY,$_SERVER['REDIRECT_GEOIP_COUNTRY_NAME']);
-                $cf_city =  CreateTextCfModel::run(amocrmConfig::CF_ID_CITY,$_SERVER['REDIRECT_GEOIP_CITY']);
-                $cf_utc=  CreateTextCfModel::run(amocrmConfig::CF_ID_UTC, $utc);
-
                 $cf_collection = $lead->getCustomFieldsValues() ?? new CustomFieldsValuesCollection();
-                $cf_collection->add($cf_country);
-                $cf_collection->add($cf_city);
-                $cf_collection->add($cf_utc);
+
+                if(!empty($_SERVER['REDIRECT_GEOIP_COUNTRY_NAME'])){
+                    $cf_country =  CreateTextCfModel::run(amocrmConfig::CF_ID_COUNTRY,$_SERVER['REDIRECT_GEOIP_COUNTRY_NAME']);
+                    $cf_collection->add($cf_country);
+                }
+                if(!empty($_SERVER['REDIRECT_GEOIP_CITY'])){
+                    $cf_city =  CreateTextCfModel::run(amocrmConfig::CF_ID_CITY,$_SERVER['REDIRECT_GEOIP_CITY']);
+                    $cf_collection->add($cf_city);
+                }
+                if(!empty($utc)){
+                    $cf_utc=  CreateTextCfModel::run(amocrmConfig::CF_ID_UTC, $utc);
+                    $cf_collection->add($cf_utc);
+                }
+
 
                 $lead->setCustomFieldsValues($cf_collection);
 

@@ -24,7 +24,7 @@ class AmoInfo extends Controller
         $statuses = AmoInfoGetStatuses::run($api_client);
         $lead_custom_fields = AmoInfoGetCustomFieldsLead::run($api_client);
         $contact_custom_fields = AmoInfoGetCustomFieldsContact::run($api_client);
-        $company_custom_fields = AmoInfoGetCustomFieldsCompany::run($api_client);
+       # $company_custom_fields = AmoInfoGetCustomFieldsCompany::run($api_client);
 
         Debuger::debug(array_merge($account,$users,$statuses,$lead_custom_fields,$contact_custom_fields));
 
