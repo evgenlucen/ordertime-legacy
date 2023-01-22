@@ -34,7 +34,7 @@ class ChangeLeadStatus extends Controller
         Assert::minLength($pipeline_id,5,"pipeline_id must min 5 simbols");
 
         Assert::notEmpty($status_id, "status_id undefined");
-        Assert::minLength($status_id,6,"status_id must min 6 simbols");
+        Assert::minLength($status_id,3,sprintf("status_id must min 3 simbols, your value: %s", (string)$status_id));
 
         Assert::notEmpty($lead_id, "lead_id undefined");
         Assert::minLength($lead_id,6,"lead_id must be min 6 simbols");
