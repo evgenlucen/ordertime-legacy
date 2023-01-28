@@ -124,12 +124,12 @@ class eventsConfig
                 ];
                 $action_model->setSalebotAction($salebot_action);
                 break;
-            case 'view_lesson_webinar_rec':
+            case 'view_lesson_4':
                 $amo_action = new AmoActionDto();
                 $amo_action->setPipelineId(amocrmConfig::PIPELINE_TG_COURSE);
                 $amo_action->setStatusId(amocrmConfig::STATUS_OPENING_WEB);
-                $amo_action->setTags(['Смотрел запись веба']);
-                $amo_action->setServiceMessage('Просмотрена запись вебинара');
+                $amo_action->setTags(['Открыл 4 урок']);
+                $amo_action->setServiceMessage('Открыл 4 урок');
                 $action_model->setAmocrmAction($amo_action);
 
 
