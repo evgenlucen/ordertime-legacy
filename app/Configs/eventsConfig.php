@@ -134,7 +134,7 @@ class eventsConfig
 
 
                 $salebot_action = new SalebotActionDto();
-                $salebot_action->message = $event_name;
+                $salebot_action->message = 'view_lesson_webinar_rec';
                 $salebot_action->vars = [
                     'is_'.$event_name => 'true',
                     'ip' => $_SERVER['REDIRECT_GEOIP_ADDR'],
