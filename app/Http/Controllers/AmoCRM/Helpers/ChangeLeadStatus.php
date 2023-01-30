@@ -80,7 +80,7 @@ class ChangeLeadStatus extends Controller
         $data_log['request'] = $request->json()->all();
         $data_log['lead'] = $lead->toArray();
 
-        Logger::writeToLog($data_log,config('logging.dir_amo_helper_add_tags'));
+        Logger::writeToLog($data_log,config('logging.dir_amo_helper_change_lead_status'));
 
         return new JsonResponse(['success' => true, 'data' => ['lead_id' => $lead->getId()]]);
 
