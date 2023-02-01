@@ -38,7 +38,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::prefix('defin')->group(function() {
+            Route::prefix('ordertime/v1')->group(function() {
                 Route::prefix('api')
                     ->middleware('api')
                     ->namespace($this->namespace)
