@@ -34,10 +34,19 @@ class EventGetcourseDealController extends Controller
         $deal = DealDto::fromRequest($request);
         $user = $deal->getUser();
 
-        #$action_param = eventsConfig::getActionParamsDtoByEventName($request->event_name);
-        $action_param = eventsConfig::getActionParamByDeal($deal, $request->event_name);
+        $action_param = eventsConfig::getActionParamsDtoByEventName($request->event_name);
+        #$action_param = eventsConfig::getActionParamByDeal($deal, $request->event_name);
 
-
+        /** Особая бизнес логика */
+        // Есть такое понятние как Нулевой заказ. Это заказ с суммой = 0.
+        // если cost_money = 0 / empty - это Нулевой заказ
+        // его мы отправляем в Новый лид.
+        if(empty($deal->getCostMoney())){
+            $action_param->getAmocrmAction()->setStatusId(amocrmConfig::STATUS_ALL_LEADS);
+            $isZeroDeal = true;
+        } else {
+            $isZeroDeal = false;
+        }
 
         # ищем по deal_id
         $leads_collection = FindLeadsByCustomFieldValue::run($api_client,amocrmConfig::CF_GC_DEAL_ID,$deal->getId());
