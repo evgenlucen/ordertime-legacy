@@ -4,8 +4,6 @@ namespace App\Configs;
 
 use App\Models\Dto\Action\ActionParamsDto;
 use App\Models\Dto\Action\AmoActionDto;
-use App\Models\Dto\Action\SalebotActionDto;
-use App\Models\Dto\GetCourse\DealDto;
 
 class eventsConfig
 {
@@ -23,9 +21,6 @@ class eventsConfig
                 $amo_action->setStatusId(amocrmConfig::STATUS_CREATED_ORDER);
                 $amo_action->setTags(['GC']);
                 $action_model->setAmocrmAction($amo_action);
-                $salebot_action = new SalebotActionDto();
-                $salebot_action->message = 'deal_create';
-                $action_model->setSalebotAction($salebot_action);
                 break;
             case 'partial_payment_success':
                 $amo_action = new AmoActionDto();
