@@ -7,6 +7,7 @@ namespace App\Services\AmoCRM\Lead;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
+use App\Configs\amocrmConfig;
 use App\Models\DTO\Action\AmoActionDto;
 use App\Models\Dto\Getcourse\DealDto;
 use App\Services\AmoCRM\Pipelines\Statuses\GetPriorityStatusByAmoActionDto;
@@ -60,6 +61,7 @@ class CreateOrUpdateLeadByDealDtoAndContact
         # создаем новую
         $lead = new LeadModel();
         $lead = UpdateLeadModelByDealDto::run($lead, $deal);
+        $lead->setResponsibleUserId(amocrmConfig::RESPONSIBLE_USER_ID);
         if(null !== $action_params) {
             $lead = UpdateLeadModelByAmoActionDto::run($lead, $action_params);
         }
