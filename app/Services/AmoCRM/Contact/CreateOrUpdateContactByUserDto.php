@@ -24,18 +24,12 @@ class CreateOrUpdateContactByUserDto
         # update model
         if (!$contacts->isEmpty()) {
             $contact = $contacts->first();
-            if (!$contact->getCustomFieldsValues()->isEmpty()) {
-//                $phone = GetValueCustomFieldByCode::run($contact->getCustomFieldsValues(),"PHONE");
-//                $email = GetValueCustomFieldByCode::run($contact->getCustomFieldsValues(),"EMAIL");
-//                if(empty($phone) or empty($email)){
+            // обновляем поля контакта, если
+            //if (null !== $contact->getCustomFieldsValues()) {
                 $custom_fields = CreateCustomFieldsCollectionByUserDto::run($user);
                 $contact->setCustomFieldsValues($custom_fields);
-
                 $contact = UpdateContactByContactModel::run($api_client, $contact);
-
-                //}
-
-            }
+            //}
         } else {
             $contact = CreateContactByUserDto::run($api_client, $user);
         }
