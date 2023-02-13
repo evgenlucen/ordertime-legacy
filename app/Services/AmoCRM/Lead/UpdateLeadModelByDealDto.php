@@ -23,7 +23,7 @@ class UpdateLeadModelByDealDto
             $lead->setPrice($deal->getCostMoney());
         }
         if($deal->getName()){
-            $lead->setName($deal->getPositions());
+            $lead->setName(!empty($deal->getPositions()) ? $deal->getPositions() : $deal->getName());
         }
 
         return $lead;
