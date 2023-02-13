@@ -22,7 +22,7 @@ class CreateOrUpdateContactByUserDto
         $contacts = FindContactsByUserDto::run($api_client, $user);
 
         # update model
-        if (!$contacts->isEmpty()) {
+        if (null !== $contacts && !$contacts->isEmpty()) {
             $contact = $contacts->first();
             // обновляем поля контакта, если
             //if (null !== $contact->getCustomFieldsValues()) {
