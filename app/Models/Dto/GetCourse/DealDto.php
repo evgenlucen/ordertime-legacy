@@ -26,6 +26,7 @@ class DealDto
     public ?int $amo_lead_id = null;
     public ?string $left_cost_money = '';
     public ?string $name = '';
+    public ?string $tag = '';
 
 
     /**
@@ -86,6 +87,9 @@ class DealDto
         }
         if(!empty($this->name)){
             $deal['name'] = $this->name;
+        }
+        if(!empty($this->tag)){
+            $deal['tag'] = $this->tag;
         }
 
         return $deal;
@@ -148,6 +152,9 @@ class DealDto
         }
         if(!empty($request->name)){
             $deal->name = $request->name;
+        }
+        if(!empty($request->tag)){
+            $deal->tag = $request->tag;
         }
 
         return $deal;
@@ -424,6 +431,17 @@ class DealDto
     public function setName(?string $name): void
     {
         $this->name = $name;
+    }
+
+
+    public function getTag(): ?string
+    {
+        return $this->tag;
+    }
+
+    public function setTag(?string $tag): void
+    {
+        $this->tag = $tag;
     }
 
 

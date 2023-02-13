@@ -5,6 +5,7 @@ namespace App\Services\AmoCRM\Lead;
 
 
 use AmoCRM\Models\LeadModel;
+use AmoCRM\Models\TagModel;
 use App\Models\Dto\Getcourse\DealDto;
 use App\Services\AmoCRM\CustomFields\CreateCustomFieldsCollectionByDealDto;
 
@@ -24,6 +25,13 @@ class UpdateLeadModelByDealDto
         }
         if($deal->getName()){
             $lead->setName(!empty($deal->getPositions()) ? $deal->getPositions() : $deal->getName());
+        }
+        if($deal->getTag()){
+            $tags = $lead->getTags();
+            $tag = new TagModel();
+            $tag->setName($deal->getTag());
+            $tags->add($tag);
+            $lead->setTags($tags);
         }
 
         return $lead;
