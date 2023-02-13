@@ -15,7 +15,7 @@ class UpdateLeadModelByDealDto
      * @param DealDto $deal
      * @return LeadModel
      */
-    public static function run(LeadModel $lead, DealDto $deal)
+    public static function run(LeadModel $lead, DealDto $deal): LeadModel
     {
         $custom_fields = CreateCustomFieldsCollectionByDealDto::run($deal);
         $lead->setCustomFieldsValues($custom_fields);
@@ -23,7 +23,7 @@ class UpdateLeadModelByDealDto
             $lead->setPrice($deal->getCostMoney());
         }
         if($deal->getName()){
-            $lead->setName($deal->getName());
+            $lead->setName($deal->getPositions());
         }
 
         return $lead;
