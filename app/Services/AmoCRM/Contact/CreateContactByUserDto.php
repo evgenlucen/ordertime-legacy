@@ -29,7 +29,8 @@ class CreateContactByUserDto
                 [
                     'error' => "Создание контакта" . $e->getMessage() . " - " . $e->getDescription(),
                     'user' => $user,
-                    'contactModel' => $contact
+                    'contactModel' => $contact,
+                    'e' => $e
                 ],
                 config('logging.dir_error')
             );
