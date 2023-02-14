@@ -25,7 +25,13 @@ class UpdateContactByContactModel
         } catch (AmoCRMMissedTokenException $e) {
         } catch (AmoCRMoAuthApiException $e) {
         } catch (AmoCRMApiException $e) {
-            Logger::writeToLog(["Создание контакта - " . $e->getMessage() . "Описание - " . $e->getDescription()],config('logging.dir_error'));
+            Logger::writeToLog(
+                [
+                    'error' => "Обновление контакта" . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
+                    'contactModel' => $contact
+                ],
+                config('logging.dir_error')
+            );
             return false;
         }
 
