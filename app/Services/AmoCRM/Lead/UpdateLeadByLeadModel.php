@@ -26,6 +26,7 @@ class UpdateLeadByLeadModel
         } catch (AmoCRMMissedTokenException $e) {
         } catch (AmoCRMoAuthApiException $e) {
         } catch (AmoCRMApiException $e) {
+            printError($e);
             return false;
         }
 
