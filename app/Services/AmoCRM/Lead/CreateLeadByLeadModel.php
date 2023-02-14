@@ -28,7 +28,8 @@ class CreateLeadByLeadModel
             Logger::writeToLog(
                 [
                     'error' => "Обновление сделки" . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
-                    'leadModel' => $leadModel
+                    'leadModel' => $leadModel,
+                    'leadToApi' => $leadModel->toApi()
                 ],
                 config('logging.dir_error')
             );
