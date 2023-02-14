@@ -9,6 +9,7 @@ use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Exceptions\AmoCRMMissedTokenException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use AmoCRM\Models\LeadModel;
+use App\Services\Logger\Logger;
 
 class UpdateLeadByLeadModel
 {
@@ -26,9 +27,17 @@ class UpdateLeadByLeadModel
         } catch (AmoCRMMissedTokenException $e) {
         } catch (AmoCRMoAuthApiException $e) {
         } catch (AmoCRMApiException $e) {
-            printError($e);
+            Logger::writeToLog(
+                [
+                    'error' => "Обновление сделки" . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
+                    'description' => var_export($e->getLastRequestInfo(), true)
+                ],
+                config('logging.dir_error')
+            );
             return false;
         }
+
+        return false;
 
     }
 }

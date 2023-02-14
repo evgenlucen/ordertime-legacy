@@ -25,12 +25,10 @@ class CreateLeadByLeadModel
         } catch (AmoCRMMissedTokenException $e) {
         } catch (AmoCRMoAuthApiException $e) {
         } catch (AmoCRMApiException $e) {
-            printError($e);
             Logger::writeToLog(
                 [
-                    'error' => "Обновление сделки" . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
-                    'leadModel' => $leadModel,
-                    'leadToApi' => $leadModel->toApi()
+                    'error' => "Создание сделки" . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
+                    'description' => var_export($e->getLastRequestInfo(), true)
                 ],
                 config('logging.dir_error')
             );

@@ -25,11 +25,10 @@ class UpdateContactByContactModel
         } catch (AmoCRMMissedTokenException $e) {
         } catch (AmoCRMoAuthApiException $e) {
         } catch (AmoCRMApiException $e) {
-            printError($e);
             Logger::writeToLog(
                 [
                     'error' => "Обновление контакта" . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
-                    'contactModel' => $contact
+                    'description' => var_export($e->getLastRequestInfo(), true)
                 ],
                 config('logging.dir_error')
             );

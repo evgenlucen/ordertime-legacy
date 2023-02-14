@@ -25,13 +25,10 @@ class CreateContactByUserDto
         try {
             $contact = $api_client->contacts()->addOne($contact);
         } catch (AmoCRMApiException $e) {
-            printError($e);
             Logger::writeToLog(
                 [
-                    'error' => "Создание контакта" . $e->getMessage() . " - " . $e->getDescription(),
-                    'user' => $user,
-                    'contactModel' => $contact,
-                    'e' => $e
+                    'error' => "Создание контакта" . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
+                    'description' => var_export($e->getLastRequestInfo(), true)
                 ],
                 config('logging.dir_error')
             );
