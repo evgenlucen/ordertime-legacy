@@ -54,10 +54,10 @@ class amocrmConfig
 
     public const PIPELINES_WORKED = [self::PIPELINE_PAID];
     /* USERS */
-    public const USER_ROP = 29092093; //Имя Время порядка
+    public const USER_ROP = 6420658; //Имя Время порядка
 
 
-    public const RESPONSIBLE_USER_ID = 29092093;
+    public const RESPONSIBLE_USER_ID = 6420658;
     /** SERVICE MESSAGE */
     public const NAME_SERVICE_MESSAGE = "EngineTun";
     public const TASK_TYPE_DOUBLE_CONTACT = 2785490;
