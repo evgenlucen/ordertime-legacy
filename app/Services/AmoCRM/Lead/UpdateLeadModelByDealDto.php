@@ -4,6 +4,7 @@
 namespace App\Services\AmoCRM\Lead;
 
 
+use AmoCRM\Collections\TagsCollection;
 use AmoCRM\Models\LeadModel;
 use AmoCRM\Models\TagModel;
 use App\Models\Dto\Getcourse\DealDto;
@@ -28,6 +29,9 @@ class UpdateLeadModelByDealDto
         }
         if($deal->getTag()){
             $tags = $lead->getTags();
+            if( null === $tags) {
+                $tags = new TagsCollection();
+            }
             $tag = new TagModel();
             $tag->setName($deal->getTag());
             $tags->add($tag);
