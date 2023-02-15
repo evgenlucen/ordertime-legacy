@@ -27,16 +27,16 @@ class UpdateLeadModelByDealDto
         if($deal->getName()){
             $lead->setName(!empty($deal->getPositions()) ? $deal->getPositions() : $deal->getName());
         }
-//        if($deal->getTag()){
-//            $tags = $lead->getTags();
-//            if( null === $tags) {
-//                $tags = new TagsCollection();
-//            }
-//            $tag = new TagModel();
-//            $tag->setName($deal->getTag());
-//            $tags->add($tag);
-//            $lead->setTags($tags);
-//        }
+        if($deal->getTag()){
+            $tags = $lead->getTags();
+            if( null === $tags) {
+                $tags = new TagsCollection();
+            }
+            $tag = new TagModel();
+            $tag->setName($deal->getTag());
+            $tags->add($tag);
+            $lead->setTags($tags);
+        }
 
         return $lead;
     }
