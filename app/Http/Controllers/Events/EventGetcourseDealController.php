@@ -40,7 +40,6 @@ class EventGetcourseDealController extends Controller
 
         $resultDispatch = EventGcDealJob::dispatch(
             $request->event_name,
-            GetApiClient::getApiClient(),
             DealDto::fromRequest($request),
             eventsConfig::getActionParamsDtoByEventName($request->event_name)
         );

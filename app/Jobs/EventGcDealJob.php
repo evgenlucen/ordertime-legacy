@@ -6,6 +6,7 @@ use AmoCRM\Client\AmoCRMApiClient;
 use App\Configs\amocrmConfig;
 use App\Models\Dto\Action\ActionParamsDto;
 use App\Models\Dto\GetCourse\DealDto;
+use App\Services\AmoCRM\ApiClient\GetApiClient;
 use App\Services\AmoCRM\Contact\CreateOrUpdateContactByUserDto;
 use App\Services\AmoCRM\Lead\CreateOrUpdateLeadByDealDtoAndContact;
 use App\Services\AmoCRM\Lead\FindLeadsByCustomFieldValue;
@@ -27,8 +28,6 @@ class EventGcDealJob implements ShouldQueue
 
     protected string $eventName;
 
-    protected AmoCRMApiClient $apiClient;
-
     protected DealDto $dealDto;
 
     protected ActionParamsDto $actionParam;
@@ -40,12 +39,10 @@ class EventGcDealJob implements ShouldQueue
      */
     public function __construct(
         string          $eventName,
-        AmoCRMApiClient $apiClient,
         DealDto         $dealDto,
         ActionParamsDto $actionParam)
     {
         $this->eventName = $eventName;
-        $this->apiClient = $apiClient;
         $this->dealDto = $dealDto;
         $this->actionParam = $actionParam;
     }
@@ -70,9 +67,11 @@ class EventGcDealJob implements ShouldQueue
             $isZeroDeal = false;
         }
 
+        $apiClient = GetApiClient::getApiClient();
+
         # ищем по deal_id
         $leads_collection = FindLeadsByCustomFieldValue::run(
-            $this->apiClient,
+            $apiClient,
             amocrmConfig::CF_GC_DEAL_ID,
             $this->dealDto->getId()
         );
@@ -80,10 +79,10 @@ class EventGcDealJob implements ShouldQueue
         # если не нашли
         if ($leads_collection->isEmpty()) {
             # ищем или создаем контакт
-            $contact = CreateOrUpdateContactByUserDto::run($this->apiClient, $this->dealDto->getUser());
+            $contact = CreateOrUpdateContactByUserDto::run($apiClient, $this->dealDto->getUser());
             # обновляем существующую сделку или создаем новую
             $lead = CreateOrUpdateLeadByDealDtoAndContact::run(
-                $this->apiClient,
+                $apiClient,
                 $this->dealDto,
                 $contact,
                 $this->actionParam->getAmocrmAction()
@@ -94,7 +93,7 @@ class EventGcDealJob implements ShouldQueue
             $lead = $leads_collection->first();
             $lead = UpdateLeadModelByAmoActionDto::run($lead, $this->actionParam->getAmocrmAction());
             $lead = UpdateLeadModelByDealDto::run($lead, $this->dealDto);
-            $lead = UpdateLeadByLeadModel::run($this->apiClient, $lead);
+            $lead = UpdateLeadByLeadModel::run($apiClient, $lead);
         }
 
         $data_log['action_param'] = $this->actionParam;
