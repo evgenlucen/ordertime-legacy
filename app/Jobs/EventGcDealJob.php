@@ -55,7 +55,7 @@ class EventGcDealJob implements ShouldQueue
      */
     public function handle(): void
     {
-        sleep(1);
+        sleep(2);
         /** Особая бизнес логика */
         // Есть такое понятние как Нулевой заказ. Это заказ с суммой = 0.
         // если cost_money = 0 / empty - это Нулевой заказ
