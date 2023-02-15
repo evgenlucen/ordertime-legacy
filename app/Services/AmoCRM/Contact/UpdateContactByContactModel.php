@@ -22,9 +22,7 @@ class UpdateContactByContactModel
     {
         try {
             $contact = $api_client->contacts()->updateOne($contact);
-        } catch (AmoCRMMissedTokenException $e) {
-        } catch (AmoCRMoAuthApiException $e) {
-        } catch (AmoCRMApiException $e) {
+        } catch (AmoCRMMissedTokenException|AmoCRMoAuthApiException|AmoCRMApiException $e) {
             Logger::writeToLog(
                 [
                     'error' => "Обновление контакта" . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
