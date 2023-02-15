@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Events;
 
 use App\Configs\amocrmConfig;
 use App\Configs\eventsConfig;
+use App\Jobs\Commands\EventGcDealJobCommand;
+use App\Jobs\EventGcDealJob;
 use App\Models\Dto\GetCourse\DealDto;
 use App\Services\AmoCRM\ApiClient\GetApiClient;
 use App\Services\AmoCRM\Contact\CreateOrUpdateContactByUserDto;
@@ -25,16 +27,29 @@ class EventGetcourseDealController extends Controller
      */
     public static function run(Request $request): JsonResponse
     {
+
         if (empty($request->event_name)) {
             return new JsonResponse(['success' => false, 'error' => "event_name undefined"]);
         }
 
-        $api_client = GetApiClient::getApiClient();
+        $command = new EventGcDealJobCommand();
+        $command->eventName = $request->event_name;
+        $command->apiClient = GetApiClient::getApiClient();
+        $command->dealDto = DealDto::fromRequest($request);
+        $command->actionParam = eventsConfig::getActionParamsDtoByEventName($request->event_name);
 
-        $deal = DealDto::fromRequest($request);
-        $user = $deal->getUser();
+        $resultDispatch = EventGcDealJob::dispatch($command);
 
-        $action_param = eventsConfig::getActionParamsDtoByEventName($request->event_name);
+        return new JsonResponse(['success' => true, 'data' =>
+            [
+                'in_queue' => true
+            ]]);
+
+        #$api_client = GetApiClient::getApiClient();
+
+        #$user = $deal->getUser();
+
+        #$action_param = eventsConfig::getActionParamsDtoByEventName($request->event_name);
         #$action_param = eventsConfig::getActionParamByDeal($deal, $request->event_name);
 
         /** Особая бизнес логика */

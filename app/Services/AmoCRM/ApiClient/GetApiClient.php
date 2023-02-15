@@ -11,7 +11,7 @@ use Symfony\Component\Dotenv\Dotenv;
 class GetApiClient
 {
 
-    private $apiClient;
+    private AmoCRMApiClient $apiClient;
 
     public function __construct()
     {
