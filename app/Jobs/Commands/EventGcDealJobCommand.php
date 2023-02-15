@@ -3,11 +3,10 @@
 namespace App\Jobs\Commands;
 
 use AmoCRM\Client\AmoCRMApiClient;
-use App\Configs\amocrmConfig;
 use App\Models\Dto\Action\ActionParamsDto;
 use App\Models\Dto\GetCourse\DealDto;
 
-class EventGcDealJobCommand
+class EventGcDealJobCommand implements \JsonSerializable
 {
     public string $eventName;
 
@@ -17,4 +16,8 @@ class EventGcDealJobCommand
 
     public ActionParamsDto $actionParam;
 
+    public function jsonSerialize()
+    {
+        // TODO: Implement jsonSerialize() method.
+    }
 }

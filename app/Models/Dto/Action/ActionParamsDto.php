@@ -3,7 +3,7 @@
 
 namespace App\Models\Dto\Action;
 
-class ActionParamsDto
+class ActionParamsDto implements \JsonSerializable
 {
     public string $name = '';
     public ?AmoActionDto $amocrm_action = null;
@@ -67,6 +67,8 @@ class ActionParamsDto
     }
 
 
-
-
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
 }

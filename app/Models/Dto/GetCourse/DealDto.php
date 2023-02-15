@@ -7,7 +7,7 @@ namespace App\Models\Dto\GetCourse;
 use App\Configs\getcourseConfig;
 use Illuminate\Http\Request;
 
-class DealDto
+class DealDto implements \JsonSerializable
 {
     public ?UserDto $user = null;
     public int $id = 0;
@@ -445,4 +445,8 @@ class DealDto
     }
 
 
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
+    }
 }

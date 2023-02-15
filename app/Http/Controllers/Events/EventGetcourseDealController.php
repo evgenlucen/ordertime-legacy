@@ -32,13 +32,18 @@ class EventGetcourseDealController extends Controller
             return new JsonResponse(['success' => false, 'error' => "event_name undefined"]);
         }
 
-        $command = new EventGcDealJobCommand();
-        $command->eventName = $request->event_name;
-        $command->apiClient = GetApiClient::getApiClient();
-        $command->dealDto = DealDto::fromRequest($request);
-        $command->actionParam = eventsConfig::getActionParamsDtoByEventName($request->event_name);
+//        $command = new EventGcDealJobCommand();
+//        $command->eventName = $request->event_name;
+//        $command->apiClient = GetApiClient::getApiClient();
+//        $command->dealDto = DealDto::fromRequest($request);
+//        $command->actionParam = eventsConfig::getActionParamsDtoByEventName($request->event_name);
 
-        $resultDispatch = EventGcDealJob::dispatch($command);
+        $resultDispatch = EventGcDealJob::dispatch(
+            $request->event_name,
+            GetApiClient::getApiClient(),
+            DealDto::fromRequest($request),
+            eventsConfig::getActionParamsDtoByEventName($request->event_name)
+        );
 
         return new JsonResponse(['success' => true, 'data' =>
             [
