@@ -101,7 +101,7 @@ class EventGcDealJob implements ShouldQueue
         $data_log['lead'] = $lead->toArray();
 
 
-        Logger::writeToLog($data_log, config('logging.dir_getcourse_deal_events'));
+        Logger::writeToLog($data_log, config('logging.dir_getcourse_deal_events_queue'));
 
     }
 }

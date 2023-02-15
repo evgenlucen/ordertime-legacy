@@ -10,6 +10,7 @@ return [
     'dir_new_register_event' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/new_register.log',
     'dir_form_submit' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/form_submit.log',
     'dir_getcourse_deal_events' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/deal_events.log',
+    'dir_getcourse_deal_events_queue' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/deal_events_queue.log',
     'dir_getcourse_user_events' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/user_events.log',
     'dir_error' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/error.log',
     'dir_amo_analytics' => __DIR__ . DIRECTORY_SEPARATOR . '../storage/logs/amo_analytics.log',

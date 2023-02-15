@@ -6,6 +6,7 @@ use AmoCRM\Client\AmoCRMApiClient;
 use App\Models\Dto\Action\ActionParamsDto;
 use App\Models\Dto\GetCourse\DealDto;
 
+# не искользуется т.к. была проблема с сериализацией APICLIENT. насрал напрямую в контроллер джобы
 class EventGcDealJobCommand implements \JsonSerializable
 {
     public string $eventName;
