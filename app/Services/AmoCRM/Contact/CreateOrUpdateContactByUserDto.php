@@ -26,6 +26,8 @@ class CreateOrUpdateContactByUserDto
             $contact = $contacts->first();
             // обновляем поля контакта, если
             //if (null !== $contact->getCustomFieldsValues()) {
+                $contact->setCreatedBy(null);
+                $contact->setUpdatedBy(null);
                 $custom_fields = CreateCustomFieldsCollectionByUserDto::run($user);
                 $contact->setCustomFieldsValues($custom_fields);
                 $contact = UpdateContactByContactModel::run($api_client, $contact);
