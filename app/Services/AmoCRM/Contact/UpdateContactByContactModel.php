@@ -26,7 +26,8 @@ class UpdateContactByContactModel
             Logger::writeToLog(
                 [
                     'error' => "Обновление контакта" . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
-                    'description' => var_export($e->getLastRequestInfo(), true)
+                    'description' => var_export($e->getLastRequestInfo(), true),
+                    'contact' => $contact->toArray()
                 ],
                 config('logging.dir_error')
             );
