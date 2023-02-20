@@ -17,6 +17,9 @@ class UpdateContactByContactModel
      * @param AmoCRMApiClient $api_client
      * @param ContactModel $contact
      * @return ContactModel
+     * @throws AmoCRMApiException
+     * @throws AmoCRMMissedTokenException
+     * @throws AmoCRMoAuthApiException
      */
     public static function run(AmoCRMApiClient $api_client, ContactModel $contact): ContactModel
     {
@@ -31,8 +34,7 @@ class UpdateContactByContactModel
                 ],
                 config('logging.dir_error')
             );
-            var_dump(['message'=> $e->getMessage(),'code' => $e->getCode()]);
-            die();
+            throw $e;
         }
 
         return $contact;

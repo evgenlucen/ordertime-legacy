@@ -19,6 +19,9 @@ class UpdateLeadByLeadModel
      * @param AmoCRMApiClient $api_client
      * @param LeadModel $lead_model
      * @return LeadModel
+     * @throws AmoCRMApiException
+     * @throws AmoCRMMissedTokenException
+     * @throws AmoCRMoAuthApiException
      */
     public static function run(AmoCRMApiClient $api_client,LeadModel $lead_model): LeadModel
     {
@@ -36,8 +39,7 @@ class UpdateLeadByLeadModel
                 ],
                 config('logging.dir_error')
             );
-            var_dump($e->getMessage());
-            die();
+            throw $e;
         }
 
         return $lead_model;
