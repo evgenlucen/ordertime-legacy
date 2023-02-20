@@ -18,26 +18,28 @@ class UpdateLeadByLeadModel
     /**
      * @param AmoCRMApiClient $api_client
      * @param LeadModel $lead_model
-     * @return LeadModel|bool
+     * @return LeadModel
      */
-    public static function run(AmoCRMApiClient $api_client,LeadModel $lead_model)
+    public static function run(AmoCRMApiClient $api_client,LeadModel $lead_model): LeadModel
     {
         try {
-            return $api_client->leads()->updateOne($lead_model);
-        } catch (AmoCRMMissedTokenException $e) {
-        } catch (AmoCRMoAuthApiException $e) {
+            $lead_model->setUpdatedBy(null);
+            $lead_model->setCreatedBy(null);
+            $lead_model = $api_client->leads()->updateOne($lead_model);
+        } catch (AmoCRMMissedTokenException|AmoCRMoAuthApiException $e) {
         } catch (AmoCRMApiException $e) {
             Logger::writeToLog(
                 [
-                    'error' => "Обновление сделки" . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
-                    'description' => var_export($e->getLastRequestInfo(), true)
+                    'error' => "Обновление сделки " . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
+                    'description' => var_export($e->getLastRequestInfo(), true),
+                    'lead' => $lead_model
                 ],
                 config('logging.dir_error')
             );
-            return false;
+            var_dump($e->getMessage());
+            die();
         }
 
-        return false;
-
+        return $lead_model;
     }
 }
