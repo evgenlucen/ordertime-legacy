@@ -14,7 +14,7 @@ class CreateOrUpdateContactByUserDto
     /**
      * @param AmoCRMApiClient $api_client
      * @param UserDto $user
-     * @return ContactModel|bool|null
+     * @return ContactModel|null
      */
     public static function run(AmoCRMApiClient $api_client, UserDto $user)
     {

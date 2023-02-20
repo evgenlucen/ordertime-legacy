@@ -16,9 +16,9 @@ class UpdateContactByContactModel
     /**
      * @param AmoCRMApiClient $api_client
      * @param ContactModel $contact
-     * @return ContactModel|bool
+     * @return ContactModel
      */
-    public static function run(AmoCRMApiClient $api_client, ContactModel $contact)
+    public static function run(AmoCRMApiClient $api_client, ContactModel $contact): ContactModel
     {
         try {
             $contact = $api_client->contacts()->updateOne($contact);
@@ -31,7 +31,8 @@ class UpdateContactByContactModel
                 ],
                 config('logging.dir_error')
             );
-            return false;
+            var_dump(['message'=> $e->getMessage(),'code' => $e->getCode()]);
+            die();
         }
 
         return $contact;
