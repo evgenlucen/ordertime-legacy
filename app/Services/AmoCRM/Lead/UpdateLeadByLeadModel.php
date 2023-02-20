@@ -29,8 +29,7 @@ class UpdateLeadByLeadModel
             $lead_model->setUpdatedBy(null);
             $lead_model->setCreatedBy(null);
             $lead_model = $api_client->leads()->updateOne($lead_model);
-        } catch (AmoCRMMissedTokenException|AmoCRMoAuthApiException $e) {
-        } catch (AmoCRMApiException $e) {
+        } catch (AmoCRMMissedTokenException|AmoCRMoAuthApiException|AmoCRMApiException $e) {
             Logger::writeToLog(
                 [
                     'error' => "Обновление сделки " . $e->getMessage() . " - " . $e->getDescription() . "-" . $e->getPrevious(),
