@@ -40,8 +40,6 @@ class CreateOrUpdateLeadByDealDtoAndContact
                 if (self::isZeroCostDeal($lead)) {
                     $lead = $leads_collection->first();
                     $lead = UpdateLeadModelByDealDto::run($lead,$deal);
-                    $lead->setUpdatedBy(null);
-                    $lead->setCreatedBy(null);
                     if(null !== $action_params) {
                         $leadPriorityStatus = GetPriorityStatusByLeadModel::run($lead);
                         $actionPriorityStatus = GetPriorityStatusByAmoActionDto::run($action_params);
