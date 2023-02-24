@@ -61,7 +61,7 @@ class CreateOrUpdateLeadByDealDtoAndContact
         # создаем новую
         $lead = new LeadModel();
         $lead = UpdateLeadModelByDealDto::run($lead, $deal);
-        $lead->setResponsibleUserId(amocrmConfig::RESPONSIBLE_USER_ID);
+        $lead->setResponsibleUserId($contact->getResponsibleUserId());
         if(null !== $action_params) {
             $lead = UpdateLeadModelByAmoActionDto::run($lead, $action_params);
         }
