@@ -13,6 +13,8 @@ use App\Services\AmoCRM\Lead\FindLeadsByCustomFieldValue;
 use App\Services\AmoCRM\Lead\UpdateLeadByLeadModel;
 use App\Services\AmoCRM\Lead\UpdateLeadModelByAmoActionDto;
 use App\Services\AmoCRM\Lead\UpdateLeadModelByDealDto;
+use App\Services\AmoCRM\Task\CreateDoubleTask;
+use App\Services\AmoCRM\Task\CreateTask;
 use App\Services\Logger\Logger;
 use Carbon\Traits\Serialization;
 use Illuminate\Bus\Queueable;
@@ -94,6 +96,9 @@ class EventGcDealJob implements ShouldQueue
             $lead = UpdateLeadModelByAmoActionDto::run($lead, $this->actionParam->getAmocrmAction());
             $lead = UpdateLeadModelByDealDto::run($lead, $this->dealDto);
             $lead = UpdateLeadByLeadModel::run($apiClient, $lead);
+
+            $addedTask = CreateTask::lead($apiClient,'был на последнем мероприятии, взять в работу',$lead->getId(),1,48);
+            $data_log['added_task'] = $addedTask->getId();
         }
 
         $data_log['action_param'] = $this->actionParam;
