@@ -97,8 +97,12 @@ class EventGcDealJob implements ShouldQueue
             $lead = UpdateLeadModelByDealDto::run($lead, $this->dealDto);
             $lead = UpdateLeadByLeadModel::run($apiClient, $lead);
 
-            $addedTask = CreateTask::lead($apiClient,'был на последнем мероприятии, взять в работу',$lead->getId(),1,48,$lead->getResponsibleUserId());
-            $data_log['added_task'] = $addedTask->getId();
+            // если статус активный - ставим задачу
+            if(!in_array($lead->getStatusId(), amocrmConfig::STATUSES_NON_WORKED)){
+                $addedTask = CreateTask::lead($apiClient,'был на последнем мероприятии, взять в работу',$lead->getId(),1,48,$lead->getResponsibleUserId());
+                $data_log['added_task'] = $addedTask->getId();
+            }
+
         }
 
         $data_log['action_param'] = $this->actionParam;
