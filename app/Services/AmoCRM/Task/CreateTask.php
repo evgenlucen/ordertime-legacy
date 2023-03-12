@@ -51,7 +51,8 @@ class CreateTask
         string $text,
         int $entityId,
         int $taskType,
-        int $hours
+        int $hours,
+        int $responsibleUserId
     ): TaskModel
     {
         $textTask = sprintf(
@@ -65,6 +66,7 @@ class CreateTask
         $taskModel->setEntityType(EntityTypesInterface::LEADS);
         $taskModel->setCompleteTill((new \DateTimeImmutable())->getTimestamp() + $hours*60*60);
         $taskModel->setTaskTypeId($taskType);
+        $taskModel->setResponsibleUserId($responsibleUserId);
 
         return $apiClient->tasks()->addOne($taskModel);
     }

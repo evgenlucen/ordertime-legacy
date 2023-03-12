@@ -97,7 +97,7 @@ class EventGcDealJob implements ShouldQueue
             $lead = UpdateLeadModelByDealDto::run($lead, $this->dealDto);
             $lead = UpdateLeadByLeadModel::run($apiClient, $lead);
 
-            $addedTask = CreateTask::lead($apiClient,'был на последнем мероприятии, взять в работу',$lead->getId(),1,48);
+            $addedTask = CreateTask::lead($apiClient,'был на последнем мероприятии, взять в работу',$lead->getId(),1,48,$lead->getResponsibleUserId());
             $data_log['added_task'] = $addedTask->getId();
         }
 
