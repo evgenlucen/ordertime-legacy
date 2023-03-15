@@ -37,7 +37,7 @@ class CreateOrUpdateLeadByDealDtoAndContact
             for($i = 0;$i < $leads_collection->count();$i++ ) {
                 $lead = $leads_collection->offsetGet($i);
                 # ищем среди них сделку с нулевым бюджетом
-                if (self::isZeroCostDeal($lead)) {
+                if (self::isZeroCostDealLead($lead)) {
                     $lead = $leads_collection->first();
                     $lead = UpdateLeadModelByDealDto::run($lead,$deal);
                     if(null !== $action_params) {
@@ -61,7 +61,13 @@ class CreateOrUpdateLeadByDealDtoAndContact
         # создаем новую
         $lead = new LeadModel();
         $lead = UpdateLeadModelByDealDto::run($lead, $deal);
-        $lead->setResponsibleUserId($contact->getResponsibleUserId());
+
+        if(self::isZeroDeal($deal)){
+            $lead->setResponsibleUserId(amocrmConfig::RESPONSIBLE_USER_ID);
+        } else {
+            $lead->setResponsibleUserId($contact->getResponsibleUserId());
+        }
+
         if(null !== $action_params) {
             $lead = UpdateLeadModelByAmoActionDto::run($lead, $action_params);
         }
@@ -72,9 +78,13 @@ class CreateOrUpdateLeadByDealDtoAndContact
         return $lead;
     }
 
-    private static function isZeroCostDeal(LeadModel $lead): bool
+    private static function isZeroCostDealLead(LeadModel $lead): bool
     {
         return 0 == $lead->getPrice() || empty($lead->getPrice());
+    }
+
+    private static function isZeroDeal(DealDto $dealDto){
+        return 0 == $dealDto->getCostMoney();
     }
 
 }
