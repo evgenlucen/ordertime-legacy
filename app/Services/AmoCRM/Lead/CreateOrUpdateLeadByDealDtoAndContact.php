@@ -65,7 +65,7 @@ class CreateOrUpdateLeadByDealDtoAndContact
         if(self::isZeroDeal($deal)){
             $lead->setResponsibleUserId(amocrmConfig::RESPONSIBLE_USER_ID);
         } else {
-            $lead->setResponsibleUserId($contact->getResponsibleUserId());
+            $lead->setResponsibleUserId($contact->getResponsibleUserId() ?? amocrmConfig::RESPONSIBLE_USER_ID);
         }
 
         if(null !== $action_params) {
