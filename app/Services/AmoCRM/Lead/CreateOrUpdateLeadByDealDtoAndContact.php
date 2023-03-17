@@ -36,6 +36,12 @@ class CreateOrUpdateLeadByDealDtoAndContact
             # Если нашли
             for($i = 0;$i < $leads_collection->count();$i++ ) {
                 $lead = $leads_collection->offsetGet($i);
+
+                //проверим на принадлежность к воронке Лайф-Менеджент
+                if(self::isLifeManagementDeal($deal)){
+                    continue;
+                }
+
                 # ищем среди них сделку с нулевым бюджетом
                 if (self::isZeroCostDealLead($lead)) {
                     $lead = $leads_collection->first();
@@ -62,7 +68,12 @@ class CreateOrUpdateLeadByDealDtoAndContact
         $lead = new LeadModel();
         $lead = UpdateLeadModelByDealDto::run($lead, $deal);
 
-        if(self::isZeroDeal($deal)){
+        /* Если нулевая сделка или Из ЛайфМенеджмента - ответственный РОП */
+        if(self::isLifeManagementDeal($deal)){
+            $action_params->setStatusId(amocrmConfig::STATUS_START);
+            $action_params->setPipelineId(amocrmConfig::PIPELINE_LIFE_MANAGEMENT);
+            $action_params->appendTag('ЛМ');
+        } elseif(self::isZeroDeal($deal)){
             $lead->setResponsibleUserId(amocrmConfig::RESPONSIBLE_USER_ID);
         } else {
             $lead->setResponsibleUserId($contact->getResponsibleUserId() ?? amocrmConfig::RESPONSIBLE_USER_ID);
@@ -83,8 +94,14 @@ class CreateOrUpdateLeadByDealDtoAndContact
         return 0 == $lead->getPrice() || empty($lead->getPrice());
     }
 
-    private static function isZeroDeal(DealDto $dealDto){
+    private static function isZeroDeal(DealDto $dealDto): bool
+    {
         return 0 == $dealDto->getCostMoney();
+    }
+
+    private static function isLifeManagementDeal(DealDto $deal): bool
+    {
+        return $deal->getTag() == 'ЛМ';
     }
 
 }

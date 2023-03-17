@@ -90,6 +90,11 @@ class AmoActionDto implements ActionInterface
         $this->tags = $tags;
     }
 
+    public function appendTag(string $tag): void
+    {
+        $this->tags[] = $tag;
+    }
+
     /**
      * @return string|null
      */

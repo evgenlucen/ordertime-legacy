@@ -38,6 +38,8 @@ class amocrmConfig
     /* PIPELINES */
     public const PIPELINE_PAID = 3656251;
 
+    public const PIPELINE_LIFE_MANAGEMENT = 6588258;
+
     public const STATUS_BOUNCE = 143;
 
 
@@ -45,6 +47,9 @@ class amocrmConfig
     public const STATUS_ALL_LEADS = 35657392; // новый лид
     public const STATUS_CREATED_ORDER = 54626350;
     public const STATUS_PREPAYMENT_SUCCESS = 54626354;
+
+    /* Life management */
+    public const STATUS_START = 56002474;
 
 
     public const STATUS_PAYMENT_SUCCESS = 142;

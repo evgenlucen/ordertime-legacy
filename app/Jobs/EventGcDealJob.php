@@ -64,9 +64,6 @@ class EventGcDealJob implements ShouldQueue
         // его мы отправляем в Новый лид.
         if (empty($this->dealDto->getCostMoney())) {
             $this->actionParam->getAmocrmAction()->setStatusId(amocrmConfig::STATUS_ALL_LEADS);
-            $isZeroDeal = true;
-        } else {
-            $isZeroDeal = false;
         }
 
         $apiClient = GetApiClient::getApiClient();
