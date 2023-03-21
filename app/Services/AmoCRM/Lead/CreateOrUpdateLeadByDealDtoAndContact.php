@@ -104,7 +104,7 @@ class CreateOrUpdateLeadByDealDtoAndContact
         if(empty($deal->getTag())){
             return false;
         } else {
-            return strpos("ЛМ", $deal->getTag());
+            return strpos($deal->getTag(), 'ЛМ') !== false;
         }
     }
 
