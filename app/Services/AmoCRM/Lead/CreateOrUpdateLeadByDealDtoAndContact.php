@@ -101,7 +101,7 @@ class CreateOrUpdateLeadByDealDtoAndContact
 
     private static function isLifeManagementDeal(DealDto $deal): bool
     {
-        return strpos("ЛМ",$deal->getTag() ?? '') !== false;
+        return $deal->getTag() == 'ЛМ';
     }
 
 }
