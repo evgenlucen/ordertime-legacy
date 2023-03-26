@@ -7,6 +7,7 @@ namespace App\Services\AmoCRM\Lead;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
+use AmoCRM\Models\TagModel;
 use App\Configs\amocrmConfig;
 use App\Models\DTO\Action\AmoActionDto;
 use App\Models\Dto\Getcourse\DealDto;
@@ -24,9 +25,9 @@ class CreateOrUpdateLeadByDealDtoAndContact
      * @return LeadModel|bool
      */
     public static function run(AmoCRMApiClient $api_client,
-        DealDto $deal,
-        ContactModel $contact,
-        AmoActionDto $action_params = null
+                               DealDto         $deal,
+                               ContactModel    $contact,
+                               AmoActionDto    $action_params = null
     )
     {
         # ищем открытые сделки полученного контакта
@@ -34,23 +35,41 @@ class CreateOrUpdateLeadByDealDtoAndContact
 
         if (!$leads_collection->isEmpty()) {
             # Если нашли
-            for($i = 0;$i < $leads_collection->count();$i++ ) {
+            for ($i = 0; $i < $leads_collection->count(); $i++) {
                 $lead = $leads_collection->offsetGet($i);
 
                 //проверим на принадлежность к воронке Лайф-Менеджент
-                if(self::isLifeManagementDeal($deal)){
-                    continue;
+                if (self::isLifeManagementDeal($deal)) {
+                    $lead = UpdateLeadModelByDealDto::run($lead, $deal);
+                    if (null !== $action_params) {
+
+                        # прописываем начальный статус для ЛМ сделки
+                        $action_params->setStatusId(amocrmConfig::STATUS_START);
+                        $action_params->setPipelineId(amocrmConfig::PIPELINE_LIFE_MANAGEMENT);
+                        $action_params->appendTag('ЛМ');
+
+                        $leadPriorityStatus = GetPriorityStatusByLeadModel::run($lead);
+                        $actionPriorityStatus = GetPriorityStatusByAmoActionDto::run($action_params);
+
+                        # если у найденного лида приоритет статуса больше чем у действия - обновляем действие.
+                        if ($leadPriorityStatus > $actionPriorityStatus) {
+                            $action_params->setStatusId($lead->getStatusId());
+                            $action_params->setPipelineId($lead->getPipelineId());
+                        }
+
+                        $lead = UpdateLeadModelByAmoActionDto::run($lead, $action_params);
+                    }
                 }
 
                 # ищем среди них сделку с нулевым бюджетом
                 if (self::isZeroCostDealLead($lead)) {
-                    $lead = $leads_collection->first();
-                    $lead = UpdateLeadModelByDealDto::run($lead,$deal);
-                    if(null !== $action_params) {
+                    # $lead = $leads_collection->first();
+                    $lead = UpdateLeadModelByDealDto::run($lead, $deal);
+                    if (null !== $action_params) {
                         $leadPriorityStatus = GetPriorityStatusByLeadModel::run($lead);
                         $actionPriorityStatus = GetPriorityStatusByAmoActionDto::run($action_params);
                         # если у найденного лида приоритет статуса больше чем у действия - обновляем действие.
-                        if($leadPriorityStatus > $actionPriorityStatus){
+                        if ($leadPriorityStatus > $actionPriorityStatus) {
                             $action_params->setStatusId($lead->getStatusId());
                             $action_params->setPipelineId($lead->getPipelineId());
                         }
@@ -69,43 +88,79 @@ class CreateOrUpdateLeadByDealDtoAndContact
         $lead = UpdateLeadModelByDealDto::run($lead, $deal);
 
         /* Если нулевая сделка или Из ЛайфМенеджмента - ответственный РОП */
-        if(self::isLifeManagementDeal($deal)){
-            $action_params->setStatusId(amocrmConfig::STATUS_START);
-            $action_params->setPipelineId(amocrmConfig::PIPELINE_LIFE_MANAGEMENT);
-            $action_params->appendTag('ЛМ');
-        } elseif(self::isZeroDeal($deal)){
+        if (self::isZeroDeal($deal) || self::isLifeManagementDeal($deal)) {
             $lead->setResponsibleUserId(amocrmConfig::RESPONSIBLE_USER_ID);
         } else {
             $lead->setResponsibleUserId($contact->getResponsibleUserId() ?? amocrmConfig::RESPONSIBLE_USER_ID);
         }
 
-        if(null !== $action_params) {
+        if (null !== $action_params) {
             $lead = UpdateLeadModelByAmoActionDto::run($lead, $action_params);
         }
         $lead = CreateLeadByLeadModel::run($api_client, $lead);
         # связываем её с контактом.
-        $linked = LinkedToContact::run($api_client,$lead,$contact);
+        $linked = LinkedToContact::run($api_client, $lead, $contact);
 
         return $lead;
     }
 
     private static function isZeroCostDealLead(LeadModel $lead): bool
     {
-        return 0 == $lead->getPrice() || empty($lead->getPrice());
+        // у сделки в бюджете 0
+        if (0 == $lead->getPrice() || empty($lead->getPrice())) {
+            // и она не относится к ЛайфМенеджменту
+            if ($lead->getPipelineId() !== amocrmConfig::PIPELINE_LIFE_MANAGEMENT) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    private static function isZeroDeal(DealDto $dealDto): bool
+    private static function isZeroDeal(DealDto $deal): bool
     {
-        return 0 == $dealDto->getCostMoney();
+        // заказ нулевой Если
+
+        // у сделки в заказа = 0
+        if (0 == $deal->getCostMoney()) {
+            //нет тегов
+            if (empty($deal->getTag())) {
+                return true;
+            }
+            // или тег содержит ЛМ
+            if (strpos($deal->getTag(), 'ЛМ') === false) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     private static function isLifeManagementDeal(DealDto $deal): bool
     {
-        if(empty($deal->getTag())){
+        if (empty($deal->getTag())) {
             return false;
         } else {
             return strpos($deal->getTag(), 'ЛМ') !== false;
         }
+    }
+
+    private static function isLifeManagementLead(LeadModel $lead): bool
+    {
+        if ($lead->getTags() === null) {
+            return false;
+        }
+
+        foreach ($lead->getTags()->getIterator() as $tag) {
+            \assert($tag instanceof TagModel);
+            if (strpos($tag->getName(), 'ЛМ') !== false) {
+                if ($lead->getPipelineId() == amocrmConfig::PIPELINE_LIFE_MANAGEMENT) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
     }
 
 }
