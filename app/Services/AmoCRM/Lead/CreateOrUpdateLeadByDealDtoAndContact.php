@@ -57,7 +57,7 @@ class CreateOrUpdateLeadByDealDtoAndContact
                             $action_params->setPipelineId($lead->getPipelineId());
                         }
 
-                        $lead = UpdateLeadModelByAmoActionDto::run($lead, $action_params);
+                        return UpdateLeadModelByAmoActionDto::run($lead, $action_params);
                     }
                 }
 
