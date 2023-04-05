@@ -5,6 +5,7 @@ namespace App\Services\AmoCRM\Lead;
 
 
 use AmoCRM\Client\AmoCRMApiClient;
+use AmoCRM\Collections\TagsCollection;
 use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
 use AmoCRM\Models\TagModel;
@@ -57,8 +58,34 @@ class CreateOrUpdateLeadByDealDtoAndContact
                             $action_params->setPipelineId($lead->getPipelineId());
                         }
 
-                        return UpdateLeadModelByAmoActionDto::run($lead, $action_params);
+                        $lead =  UpdateLeadModelByAmoActionDto::run($lead, $action_params);
+                        # и обновляем её и выходим
+                        return UpdateLeadByLeadModel::run($api_client, $lead);
                     }
+                }
+
+                // если Нулевой заказ и Ненулевая сделка - обновить только теги.
+                if(self::isZeroDeal($deal) && !self::isZeroCostDealLead($lead)){
+                    if($lead->getTags() === null){
+                        $leadTags = new TagsCollection();
+                    } else {
+                        $leadTags = $lead->getTags();
+                    }
+
+                    if($action_params->getTags() !== null){
+                        foreach ($action_params->getTags() as $tag){
+                            $tagModel = new TagModel();
+
+                            $leadTags->add($tagModel->setName($tag));
+                        }
+                    }
+                    if(is_string($deal->getTag())){
+                        $dealTag = new TagModel();
+                        $leadTags->add($dealTag->setName($deal->getTag()));
+                    }
+
+                    # и обновляем её и выходим
+                    return UpdateLeadByLeadModel::run($api_client, $lead);
                 }
 
                 # ищем среди них сделку с нулевым бюджетом
@@ -79,6 +106,7 @@ class CreateOrUpdateLeadByDealDtoAndContact
                     # и обновляем её и выходим
                     return UpdateLeadByLeadModel::run($api_client, $lead);
                 }
+
             }
 
         }
@@ -127,7 +155,7 @@ class CreateOrUpdateLeadByDealDtoAndContact
                 return true;
             }
             // или тег содержит ЛМ
-            if (strpos($deal->getTag(), 'ЛМ') === false) {
+            if (\strpos($deal->getTag(), 'ЛМ') === false) {
                 return true;
             }
         }
